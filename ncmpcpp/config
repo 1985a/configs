@@ -1,0 +1,78 @@
+##
+## Basic options
+##
+
+## Files ##
+ncmpcpp_directory = "~/.ncmpcpp"
+lyrics_directory = "~/.ncmpcpp/lyrics"
+##execute_on_song_change = "~/.ncmpcpp/songchange.sh"
+
+## Unsupported mouse ##
+mouse_support = "yes"
+mouse_list_scroll_whole_page = "no"
+
+## Navigation ##
+cyclic_scrolling = "yes"
+header_text_scrolling = "yes"
+jump_to_now_playing_song_at_start = "yes"
+lines_scrolled = "2"
+allow_for_physical_item_deletion = "no"
+ask_before_clearing_playlists = "yes"
+display_bitrate = "yes"
+
+## Other ##
+system_encoding = "utf-8"
+regular_expressions = "extended"
+
+
+##
+## Appearance
+##
+
+## Interface'n'Columns ##
+user_interface = "alternative"
+song_list_format = "{$7%n$3} {$5%a |-| %t$6}$R{$7%b$3}"
+song_status_format = "{{%a{ %b{ (%y)}} - }{%t$10}}|{%f}"
+default_place_to_search_in = "database"
+song_columns_list_format = "(20)[]{a} (6f)[10]{NE} (50)[65]{t|f:Title} (20)[cyan]{b} (7f)[magenta]{l}"
+
+
+## I dont't like columns ##
+playlist_display_mode = "columns"
+browser_display_mode = "classic"
+search_engine_display_mode = "classic"
+
+## Colots of another elements ##
+header_window_color = "red"
+volume_color = "28"
+state_line_color = "96"
+player_state_color = "10"
+state_flags_color = "4"
+main_window_color = "23"
+main_window_highlight_color = "11"
+progressbar_elapsed_color = "198"
+statusbar_color = "27"
+active_column_color = "125"
+
+## Selected tracks ##
+selected_item_prefix = "* $6"
+discard_colors_if_item_is_selected = "yes"
+
+
+## Seeking ##
+incremental_seeking = "yes"
+seek_time = "1"
+
+## Visivility ##
+header_visibility = "yes"
+statusbar_visibility = "yes"
+titles_visibility = "yes"
+
+## Other ##
+now_playing_prefix = "$b "
+#progressbar_look = "───"
+progressbar_look = "▀▀ "
+colors_enabled = "yes"
+autocenter_mode = "yes"
+centered_cursor = "yes"
+external_editor = "vim"

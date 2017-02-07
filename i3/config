@@ -1,0 +1,231 @@
+smart_gaps on
+smart_borders on
+gaps inner 5
+
+smart_borders on
+
+set $mod Mod4
+
+font pango:Droid Sans Mono for Powerline 10
+
+
+new_window pixel 3
+focus_follows_mouse  no
+
+#don't move to neighbouring screen with hjkl
+force_focus_wrapping yes
+
+# Use by status bar
+set $gray1 #373d48
+set $gray2 #29303a
+
+# User by window
+set $gold1 #E6E4A5
+set $gold2 #262626
+
+client.focused            $gold1   $gold1   #FFFFFF   $gold1
+client.focused_inactive   $gold2   $gold2   #FFFFFF   #000000
+client.unfocused          $gold2   $gold2   #FFFFFF   #000000
+
+# use Mouse+$mod to drag floating windows to their wanted position
+floating_modifier $mod
+
+# start a terminal
+bindsym $mod+Return exec konsole
+
+# kill focused window
+bindsym $mod+c kill
+
+# start dmenu (a program launcher)
+# bindsym $mod+p exec "dmenu_run -nb black -p run"
+
+bindsym $mod+p exec --no-startup-id rofi -show run -terminal konsole -width 25 -padding 5  -bw 0 -font "Droid Sans Mono for Powerline 14" -opacity "90" -fuzzy
+#bindsym $mod+Shift+p exec --no-startup-id rofi -show window -terminal konsole -fullscreen -padding 175 -bw 0 -font "Droid Sans Mono for Powerline 14" -opacity "90" -fuzzy
+#bindsym $mod+Shift+s exec --no-startup-id rofi -show ssh -terminal konsole -fullscreen -padding 175 -bw 0 -font "Droid Sans Mono for Powerline 14" -opacity "90" -fuzzy
+
+# added from other site
+#exec --no-startup-id pcmanfm /home/compadre
+bindsym $mod+Shift+b exec --no-startup-id pcmanfm /home/compadre
+
+# to launch urxvt 
+
+# bindsym $mod+Shift+j exec urxvt -fn 'xft:DejaVu Sans Mono for Powerline-08'
+
+# restart dunst
+#bindsym $mod+Shift+d exec killall dunst && exec notify-send 'restart dunst'
+
+# Synaptic mouse to allow vert scrolling
+exec --no-startup-id synclient VertEdgeScroll=1 HorizEdgeScroll=1 TapButton1=1
+
+# screen lock
+bindsym Control+$mod+l exec lock
+
+# change focus
+bindsym $mod+h focus left
+bindsym $mod+j focus down
+bindsym $mod+k focus up
+bindsym $mod+l focus right
+
+# move focused window
+bindsym $mod+Shift+h move left
+bindsym $mod+Shift+j move down
+bindsym $mod+Shift+k move up
+bindsym $mod+Shift+l move right
+
+# split in horizontal orientation
+#bindsym $mod+v split h
+
+# split in vertical orientation
+#bindsym $mod+g split v
+
+# enter fullscreen mode for the focused container
+bindsym $mod+f fullscreen
+
+# change container layout (tabbed, toggle split)
+#bindsym $mod+n layout tabbed
+#bindsym $mod+m layout toggle split
+
+# container navigation
+#bindsym $mod+d focus parent
+#bindsym $mod+b focus child
+
+# move container between displays
+bindsym $mod+semicolon move workspace to output right
+
+# toggle tiling / floating
+bindsym $mod+Shift+f floating toggle
+
+# change focus between tiling / floating windows
+bindsym $mod+space focus mode_toggle
+
+# switch to last workspace
+bindsym $mod+6 workspace back_and_forth
+
+# switch to workspace
+bindsym $mod+q workspace 1: 
+bindsym $mod+w workspace 2: 
+bindsym $mod+e workspace 3: 
+bindsym $mod+r workspace 4: 
+bindsym $mod+t workspace 5: 
+bindsym $mod+y workspace 6: 
+bindsym $mod+u workspace 7: 
+bindsym $mod+i workspace 8: 
+#bindsym $mod+i workspace 8: 
+bindsym $mod+o workspace 9: 
+
+# move focused container to workspace
+bindsym $mod+Shift+q move container to workspace 1: 
+bindsym $mod+Shift+w move container to workspace 2: 
+bindsym $mod+Shift+e move container to workspace 3: 
+bindsym $mod+Shift+r move container to workspace 4: 
+bindsym $mod+Shift+t move container to workspace 5: 
+bindsym $mod+Shift+y move container to workspace 6: 
+bindsym $mod+Shift+u move container to workspace 7: 
+bindsym $mod+Shift+i move container to workspace 8: 
+#bindsym $mod+Shift+i move container to workspace 8: 
+bindsym $mod+Shift+o move container to workspace 9: 
+
+bindsym $mod+z reload
+bindsym $mod+Shift+x restart
+bindsym $mod+Shift+z exit
+
+mode "resize" {
+        bindsym h   resize shrink width 10 px or 10 ppt
+        bindsym j   resize grow height 10 px or 10 ppt
+        bindsym k   resize shrink height 10 px or 10 ppt
+        bindsym l   resize grow width 10 px or 10 ppt
+
+        # back to normal: Enter or Escape or q or ^[
+        bindsym Return mode "default"
+        bindsym q mode "default"
+        bindsym Escape mode "default"
+        bindcode Control+34 mode "default"
+}
+
+bindsym $mod+s mode "resize"
+
+# multimedia keys
+bindsym XF86AudioRaiseVolume exec "pamixer --sink 0 -i 5"
+bindsym XF86AudioLowerVolume exec "pamixer --sink 0 -d 5"
+bindsym XF86AudioMute exec "pamixer --sink 0 -t"
+
+#bindsym XF86AudioPlay exec "~/.bin/player toggle"
+#bindsym XF86AudioStop exec "~/.bin/player stop"
+#bindsym XF86AudioNext exec "~/.bin/player next"
+#bindsym XF86AudioPrev exec "~/.bin/player previous"
+
+bindsym XF86MonBrightnessUp exec xbacklight -inc 10     # increase screen brightness
+bindsym XF86MonBrightnessDown exec xbacklight -dec 10   # decrease screen brightness
+
+bindsym XF86TouchpadToggle exec "synclient TouchpadOff=$(synclient | awk '/TouchpadOff/ {print ($3+1)%2}')"
+
+bindsym XF86Display exec "arandr"
+
+# bindsym $mod+a exec "konsole -e pulsemixer"
+#bindsym $mod+Shift+a exec "pavucontrol"
+bindsym $mod+Shift+g exec "chromium"
+#bindsym $mod+Shift+9 exec "/usr/bin/bash -c /home/speed/spot && exec notify-send 'Starting Spotify'"
+
+##Wallpaper##
+exec_always feh --bg-scale ~/Pictures/background.jpg
+
+##compton##
+#exec_always compton -f -b --backend glx --vsync opengl-swc
+# las demas opciones luego de -f, pueden provocar tearing en fullscreen.
+# Video para probar: https://goo.gl/EWhF1e
+
+#exec_always compton --vsync opengl --backend xr_glx_hybrid --paint-on-overlay --shadow-exclude n:w:VirtualBox -b
+
+
+# Multi-monitor
+
+# Move focused workspace to monitor
+bindsym $mod+Shift+bracketleft move workspace to output left
+bindsym $mod+Shift+bracketright move workspace to output right
+
+
+# exit i3 (logs you out of your X session)
+#bindsym $mod+Shift+Delete exec "i2-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
+
+
+set $mode_system System:   L :  | S :  | P :  | R :  | E :   
+mode "$mode_system" {
+	bindsym l exec --no-startup-id i3lock-fancy, mode "default"
+	  bindsym s exec --no-startup-id $Lock systemctl suspend, mode "default
+	  bindsym p exec --no-startup-id systemctl poweroff -i, mode "default"
+	  bindsym r exec --no-startup-id systemctl reboot, mode "default"
+	  bindsym e exec --no-startup-id i3-msg exit, mode "default"
+      # back to normal: Enter or Escape
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+	}
+	bindsym $mod+Shift+Delete mode "$mode_system"
+
+
+#######Assigns###############
+assign [class="pcmanfm"] 1 
+assign [class="konsole"] 2 
+assign [class="urxvt"] 2 
+assign [class="chromium"] 3 
+assign [class="kwrite"] 4 
+assign [class="gedit"] 4 
+assign [class="kate"] 4 
+#assign [class="
+assign [class="Vlc"] 6 
+assign [class="mpv"] 6 
+assign [class="Spotify"] 7 
+assign [class=zathura"] 8 
+
+ bar {
+  position top
+  font pango:Droid Sans Mono for Powerline 10
+status_command ~/conky-wrapper
+   strip_workspace_numbers yes
+   colors {
+    statusline #AAAAAA
+    background $gray2
+    focused_workspace $gray2 $gray2 #FFFFFF
+    inactive_workspace $gray1 $gray1 #AAAAAA
+   }
+ }
+

@@ -1,0 +1,86 @@
+execute pathogen#infect()
+
+set rtp+=~/.vim/bundle/Vundle.vim 
+call vundle#begin() 
+Plugin 'gmarik/Vundle.vim' 
+Plugin 'nerdtree/plugin/NERD_tree.vim'
+Plugin 'openfile-under-cursor/open_file_under_cursor.vim'
+call vundle#end()            " required 
+filetype plugin indent on    " required 
+
+set number
+syntax on
+syntax enable
+set background=light
+colorscheme solarized
+
+" Note: Skip initialization for vim-tiny or vim-small.
+if 0 | endif
+if &compatible
+	set nocompatible "Be iMproved
+endif
+
+"Required:
+set runtimepath^=~/.vim/bundle/neobundle.vim/
+
+"Required:
+call neobundle#begin(expand('~/.vim/bundle/'))
+"Let NeoBundle manage NeoBundle
+NeoBundleFetch 'Shougo/neobundle.vim'
+call neobundle#end()
+filetype plugin indent on
+NeoBundleCheck
+
+"Indent guides
+let g:indent_guides_auto_colors = 0
+autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=red   ctermbg=3
+autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=green ctermbg=4
+
+set rtp+=/usr/lib/python3.5/site-packages/powerline/bindings/vim
+
+Bundle 'powerline/powerline', {'rtp': 'powerline/bindings/vim/'}
+
+"fix powerline 
+set encoding=utf-8   
+
+let g:airline_powerline_fonts=1
+let g:Powerline_symbols='unicode'
+
+" Other options
+set ttyfast " don't lag...
+set cursorline " track position
+"set nocompatible " leave the old ways behind...
+set nowrap "don't wrap lines
+set nobackup "disable backup files (filename ~)
+set splitbelow "place new files below the current
+"set showmatch "matching brackets & the like
+set clipboard+=unnamed "yank and copy to X clipboard
+"set encoding=utf-8 "UTF-8 encoding for all new files
+set backspace=2 "full backspacing capabilities
+set scrolloff=10 "keep 10 lines of context
+set number " show line numbers
+set linebreak "attempt to wrap lines cleanly
+set wildmenu "enhanced tab-completeion show
+"set spelllang=en_gb "real English spelling
+
+let g:is_posix=1 "POSIX shell scripts
+let g:is_bash=1 " bash syntax
+let g:vimsyn_noerror=1 "hack for correct syntax
+
+" Fixing background issue in Vim on urxvt
+"set nocompatible
+set t_Co=16
+call pathogen#infect()
+syntax on
+set background=light " dark|light "
+colorscheme solarized
+filetype plugin on
+filetype indent on
+
+" Let uses sudo when you forgot to open file as root
+cmap w!! w !sudo tee % >/dev/null
+
+" lets use youcompleteme plugin
+let g:ycm_global_extra_conf = '/usr/share/vim/vimfiles/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py'
+
+" set termguicolors

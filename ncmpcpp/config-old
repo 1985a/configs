@@ -1,0 +1,78 @@
+% egrep -v '^#' .ncmpcpp/config
+mpd_music_dir = "~/Music/"
+visualizer_in_stereo = "yes"
+visualizer_fifo_path = "/tmp/mpd.fifo"
+visualizer_output_name = "FIFO"
+visualizer_sync_interval = "30"
+#visualizer_type = "spectrum"
+visualizer_look = "◆▋"
+message_delay_time = "3"
+playlist_shorten_total_times = "yes"
+playlist_display_mode = "columns"
+browser_display_mode = "columns"
+search_engine_display_mode = "columns"
+playlist_editor_display_mode = "columns"
+autocenter_mode = "yes"
+centered_cursor = "yes"
+user_interface = "alternative"
+alternative_header_first_line_format = "$(11)─┤ $b$(13)%a$(end)$/b ├─$(end)"
+alternative_header_second_line_format = "$(4)%t (%y)$(end)"
+alternative_ui_separator_color = "11"
+
+#From other config
+now_playing_prefix = "$b$5♫ $7>$5> " 
+lyrics_directory = "~/.ncmpcpp/lyrics"
+selected_item_prefix = "$6"
+selected_item_suffix = "$9"
+
+
+follow_now_playing_lyrics = "yes"
+locked_screen_width_part = "60"
+display_bitrate = "yes"
+external_editor = "vim"
+
+#colors_enabled = yes
+colors_enabled = "yes"
+
+#
+empty_tag_color = "white"
+#
+header_window_color = "white"
+
+#
+main_window_color = "blue"
+#
+color1 = "blue"
+#
+color2 = "cyan"
+
+#
+display_remaining_time = "yes"
+
+volume_color = "red"
+state_line_color = "white"
+state_flags_color = "blue"
+#progressbar_color = "red"
+
+#progressbar_color = 1
+progressbar_elapsed_color = "11"
+progressbar_look = "──━"
+song_status_format = " $(15)%a$(end) $4⟫$7⟫$0 $(13)%t$(end) $4⟫$7⟫$0  $(11)%b$(end)"
+
+statusbar_color = "cyan"
+visualizer_color = "blue"
+mpd_host = "127.0.0.1"
+mouse_list_scroll_whole_page = "yes"
+lines_scrolled = "1"
+#ask_before_clearing_main_playlist = "yes"
+enable_window_title = "yes"
+song_columns_list_format = "(25)[cyan]{a} (40)[]{f} (30)[red]{b} (7f)[green]{l}"
+mpd_port = "6600"
+mpd_connection_timeout = "5"
+mpd_crossfade_time = "1"
+song_list_format = "{(%l) }{%a - }{%t}|{%f}"
+song_library_format = "{%n - }{%t}|{%f}"
+
+## Other ##
+system_encoding = "utf-8"
+regular_expressions = "extended"

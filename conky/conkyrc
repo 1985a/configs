@@ -1,0 +1,111 @@
+#!/usr/bin/conky
+background        no
+out_to_console 	  yes
+out_to_x	  no
+update_interval	  2
+total_run_times	  0
+short_units	  yes
+pad_percents	  2
+
+override_utf8_locale yes
+times_in_seconds true
+
+TEXT
+,[
+  # weather
+  #{
+  #  "full_text": " ${exec cat ~/.tmp/weather/icon}  ${exec cat ~/.tmp/weather/current} ",
+  #  "color":"\#B58900",
+ #   "align": "left"
+#  },
+ # TEMP Processors
+ {
+  "full_text": "  ${hwmon 0 temp 1}/${hwmon 1 temp 2}°C ",
+   "color":"\#B58900",
+   "align": "left"
+},
+
+ # RPM Processors
+{ 
+  "full_text": " ${hwmon 0 fan 1 } RPM  ",
+  "color":"\#B58900",
+  "align": "left"
+
+},
+
+  # MPD
+ ${if_mpd_playing}
+  {
+  "full_text": "  ${mpd_smart} ",
+  "color":"\#ff8300",
+  "align": "left"
+  },
+ 
+  # wireless adapter
+  ${if_up wlan0}
+    {
+      "full_text": "   ${downspeedf wlan0}KB   ${upspeedf wlan0}KB ",
+      "color":"\#d7efa0"
+    },
+    {
+      "full_text": "  ",
+      "color":"\#50ff00"
+    },
+  $else 
+    # vpn
+    ${if_up ppp0}
+      {
+        "full_text": "   ${downspeedf ppp0}KB   ${upspeedf ppp0}KB ",
+        "color":"\#A4ADD3"
+      },
+      {
+        "full_text": "   orange ",
+        "color":"\#33CC99"
+      },
+    $else
+      # ethernet adapter
+      ${if_up enp2s0}
+        {
+          "full_text": "   ${downspeedf enp2s0}KB   ${upspeedf enp2s0}KB ",
+          #"color":"\#A4ADD3"
+	   "color":"\#8FBF3D"
+        },
+        {
+          "full_text": "   enp2s0 ",
+          "color":"\#33CC99"
+        },
+      $else
+        {
+          "full_text": " ≈ no connection ",
+          "color":"\#33CC99"
+        },
+      $endif
+    $endif
+  $endif
+ $endif
+
+   # battery status
+  {
+    "full_text": " ${exec ~/configs/dotfiles-master1/scripts/batteryicon} ${battery_percent BAT0}% ${format_time X"\hh \mm"} ",
+    "color":"\#F4C242"
+  },
+   # system volume
+  {
+    "full_text": " ${exec ~/configs/dotfiles-master1/scripts/volumelevel.sh}% ",
+	  "color": ${if_empty ${exec ~/configs/dotfiles-master1-master1/scripts/ismute.sh | grep yes}}"\#D4F442"${else}"\#ffff00"${endif}
+  },
+  
+  # date
+  {
+   "full_text": "  ${time %a %m/%d/%y} "
+   ,
+   "color":"\#42dcf4"
+ },
+
+  # time
+  {
+   "full_text": "  ${time %R} "
+   ,
+   "color":"\#ffffff"
+  }
+]
