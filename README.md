@@ -1,10 +1,16 @@
-# configs
+# Config files
+=================
 Hello, these are my configs files that it allows to me work on my computer.
 
 Everything here, need to be on correct place, so I think you already know where is.
 
+[![screenshot1](picture/seventh.png?raw=true)](picture/seventh.png?raw=true)
+
 
 To be honest, this is an example how to put the files on your system.
+
+# How to put these files
+=========================
 
 $HOME = /home/youruserhere/
 
