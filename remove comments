@@ -1,0 +1,10 @@
+One way to remove all comments is to use grep with -o option:
+
+grep -o '^[^#]*' file
+
+
+where
+
+-o: prints only matched part of the line
+first ^: beginning of the line
+[^#]*: any character except # repeated zero or more times
