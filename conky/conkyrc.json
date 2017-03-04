@@ -1,15 +1,15 @@
 conky.config = {
 
-background 	= false,
-out_to_console	= true,
-out_to_x	= false,
-update_interval	= 2,
-total_run_times	= 0,
-short_units	= true,
-pad_percents	= 2,
+background 			= false,
+out_to_console		= true,
+out_to_x			= false,
+update_interval		= 2,
+total_run_times		= 0,
+short_units			= true,
+pad_percents		= 2,
 
-override_utf8_locale = false,
-times_in_seconds = true,
+override_utf8_locale 	= false,
+times_in_seconds 		= true,
 
 };
 
