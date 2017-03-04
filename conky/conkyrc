@@ -13,11 +13,19 @@ times_in_seconds true
 TEXT
 ,[
   # weather
-  #{
-  #  "full_text": " ${exec cat ~/.tmp/weather/icon}  ${exec cat ~/.tmp/weather/current} ",
-  #  "color":"\#B58900",
- #   "align": "left"
-#  },
+#  {
+ #   "full_text" : " ${execi 300 ~/configs/dotfiles-master1/scripts/weather2.sh "14|DO|Nagua"}" ,
+ #   "separator":true, "separator_block_width":8,
+ #   "color":"\#B58900",
+ #  "align": "left"
+ # },
+# PACMAN updates
+{
+"full_text": "  ${execpi 3600 checkupdates | wc -l}",
+   "color":"\#B58900",
+   "align": "left"
+}, 
+
  # TEMP Processors
  {
   "full_text": "  ${hwmon 0 temp 1}/${hwmon 1 temp 2}°C ",
@@ -32,19 +40,54 @@ TEXT
   "align": "left"
 
 },
+ # MPD
+ #${if_mpd_playing}
+  #{
+  #"full_text": "  ${mpd_smart} ",
+  #"color":"\#ff8300",
+  #"align": "left"
+  #},
 
-  # MPD
- ${if_mpd_playing}
-  {
-  "full_text": "  ${mpd_smart} ",
-  "color":"\#ff8300",
-  "align": "left"
-  },
- 
+### MPD CONKY
+# Any UTF8 JSON error may be cause by some invalid character in title/filename song
+
+{ "full_text" : ${if_mpd_playing}" mpd",  "separator":false, "separator_block_width":5, "color":"\#ff8300"},
+
+{ "full_text" :\
+${if_mpd_playing}\
+                ${if_match "${mpd_random}"=="On"}\
+                ""\
+                ${else} ""\
+                ${endif}\
+${else}""${endif},  "separator":false, "separator_block_width":3, "color" : ${if_match "${mpd_random}"=="On"}\
+                "\#ff8300"\
+                ${else} "\#999999"\
+                ${endif}},
+{ "full_text" :\
+${if_mpd_playing}\
+                ${if_match "${mpd_repeat}"=="On"}\
+                ""\
+                ${else} ""\
+                ${endif}\
+${else}""${endif},  "separator":false, "separator_block_width":5, "color" : ${if_match "${mpd_repeat}"=="On"}\
+                "\#ff8300"\
+                ${else} "\#999999"\
+                ${endif}},
+
+{ "full_text" : ${if_mpd_playing} ${if_match "${mpd_status}"=="Playing"}
+                                  " ${scroll 26 2 ${mpd_smart}} |"\
+                                  ${else} " ${scroll 26 2 ${mpd_smart}} |"\
+                                  ${endif}\
+                ${else}""${endif},  "separator":false, "separator_block_width":8, "color":"\#ff8300"},
+####
+
+
+
   # wireless adapter
-  ${if_up wlan0}
+  ${if_existing /sys/class/net/wlan0/operstate up}
     {
       "full_text": "   ${downspeedf wlan0}KB   ${upspeedf wlan0}KB ",
+      "separator":false, "separator_block_width":8,
       "color":"\#d7efa0"
     },
     {
@@ -64,19 +107,19 @@ TEXT
       },
     $else
       # ethernet adapter
-      ${if_up enp2s0}
+      ${if_existing /sys/class/net/eth0/operstate up}
         {
-          "full_text": "   ${downspeedf enp2s0}KB   ${upspeedf enp2s0}KB ",
+          "full_text": "   ${downspeedf eth0}KB   ${upspeedf eth0}KB ",
           #"color":"\#A4ADD3"
 	   "color":"\#8FBF3D"
         },
         {
-          "full_text": "   enp2s0 ",
+          "full_text": "   ",
           "color":"\#33CC99"
         },
       $else
         {
-          "full_text": " ≈ no connection ",
+          "full_text": "  no connection ",
           "color":"\#33CC99"
         },
       $endif
@@ -101,6 +144,13 @@ TEXT
    ,
    "color":"\#42dcf4"
  },
+  # weather
+  {
+    "full_text" : " ${execi 300 ~/configs/dotfiles-master1/scripts/weather2.sh "Nagua"}" ,
+    "separator":true, "separator_block_width":8,
+    "color":"\#B58900",
+   "align": "left"
+  },
 
   # time
   {
