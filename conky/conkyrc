@@ -1,24 +1,24 @@
-#!/usr/bin/conky
-background        no
-out_to_console 	  yes
-out_to_x	  no
-update_interval	  2
-total_run_times	  0
-short_units	  yes
-pad_percents	  2
+conky.config = {
 
-override_utf8_locale yes
-times_in_seconds true
+background 	= false,
+out_to_console	= true,
+out_to_x	= false,
+update_interval	= 2,
+total_run_times	= 0,
+short_units	= true,
+pad_percents	= 2,
 
-TEXT
-,[
-  # weather
-#  {
- #   "full_text" : " ${execi 300 ~/configs/dotfiles-master1/scripts/weather2.sh "14|DO|Nagua"}" ,
- #   "separator":true, "separator_block_width":8,
- #   "color":"\#B58900",
- #  "align": "left"
- # },
+override_utf8_locale = false,
+times_in_seconds = true,
+
+};
+
+conky.text = 
+[[
+
+# JSON for i3bar
+[
+
 # PACMAN updates
 {
 "full_text": "  ${execpi 3600 checkupdates | wc -l}",
@@ -40,49 +40,48 @@ TEXT
   "align": "left"
 
 },
- # MPD
- #${if_mpd_playing}
-  #{
-  #"full_text": "  ${mpd_smart} ",
-  #"color":"\#ff8300",
-  #"align": "left"
-  #},
-
 ### MPD CONKY
 # Any UTF8 JSON error may be cause by some invalid character in title/filename song
 
-{ "full_text" : ${if_mpd_playing}" mpd",  "separator":false, "separator_block_width":5, "color":"\#ff8300"},
+{ "full_text" : ${if_mpd_playing}" mpd", 
+"separator":false,
+"separator_block_width":5,
+"color":"\#ff8300"},
 
 { "full_text" :\
 ${if_mpd_playing}\
-                ${if_match "${mpd_random}"=="On"}\
-                ""\
-                ${else} ""\
-                ${endif}\
-${else}""${endif},  "separator":false, "separator_block_width":3, "color" : ${if_match "${mpd_random}"=="On"}\
-                "\#ff8300"\
-                ${else} "\#999999"\
-                ${endif}},
+${if_match "${mpd_random}"=="On"}\
+""\
+${else} ""\
+${endif}\
+${else}""${endif},
+"separator":false,
+"separator_block_width":3,
+"color" : ${if_match "${mpd_random}"=="On"}\
+"\#ff8300"\
+${else} "\#999999"\
+${endif}},
 { "full_text" :\
 ${if_mpd_playing}\
-                ${if_match "${mpd_repeat}"=="On"}\
-                ""\
-                ${else} ""\
-                ${endif}\
-${else}""${endif},  "separator":false, "separator_block_width":5, "color" : ${if_match "${mpd_repeat}"=="On"}\
-                "\#ff8300"\
-                ${else} "\#999999"\
-                ${endif}},
-
+${if_match "${mpd_repeat}"=="On"}""\
+${else} ""\
+${endif}\
+${else}""${endif},
+"separator":false,
+"separator_block_width":5,
+"color" : ${if_match "${mpd_repeat}"=="On"}\
+"\#ff8300"\
+${else} "\#999999"\
+${endif}},
 { "full_text" : ${if_mpd_playing} ${if_match "${mpd_status}"=="Playing"}
-                                  " ${scroll 26 2 ${mpd_smart}} |"\
-                                  ${else} " ${scroll 26 2 ${mpd_smart}} |"\
-                                  ${endif}\
-                ${else}""${endif},  "separator":false, "separator_block_width":8, "color":"\#ff8300"},
+" ${scroll 22 2 ${mpd_smart}} |"\
+${else} " ${scroll 22 2 ${mpd_smart}} |"\
+${endif}\
+${else}""${endif},
+"separator":false,
+"separator_block_width":8,
+"color":"\#ff8300"},
 ####
-
-
-
   # wireless adapter
   ${if_existing /sys/class/net/wlan0/operstate up}
     {
@@ -158,4 +157,7 @@ ${else}""${endif},  "separator":false, "separator_block_width":5, "color" : ${if
    ,
    "color":"\#ffffff"
   }
-]
+
+],
+
+]];
