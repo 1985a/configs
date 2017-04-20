@@ -28,14 +28,14 @@ conky.text =
 
  # TEMP Processors
  {
-  "full_text": "  ${hwmon 0 temp 1}/${hwmon 1 temp 2}°C ",
+  "full_text": "  ${hwmon 1 temp 1}/${hwmon 0 temp 2}°C ",
    "color":"\#B58900",
    "align": "left"
 },
 
  # RPM Processors
 { 
-  "full_text": " ${hwmon 0 fan 1 } RPM  ",
+  "full_text": " ${hwmon 1 fan 1 } RPM ",
   "color":"\#B58900",
   "align": "left"
 
@@ -43,44 +43,14 @@ conky.text =
 ### MPD CONKY
 # Any UTF8 JSON error may be cause by some invalid character in title/filename song
 
-{ "full_text" : ${if_mpd_playing}" mpd", 
-"separator":false,
-"separator_block_width":5,
-"color":"\#ff8300"},
+{ "full_text" :${if_mpd_playing}" mpd", "separator":false,"separator_block_width":5,"color":"\#ff8300"},
+{ "full_text" :${if_mpd_playing}${if_match "${mpd_random}"=="On"}""${else} ""${endif}${else}""${endif},
+"separator":false,"separator_block_width":3,"color" : ${if_match "${mpd_random}"=="On"}"\#ff8300"${else} "\#999999"${endif}},
+{ "full_text" :${if_mpd_playing}${if_match "${mpd_repeat}"=="On"}""${else} ""${endif}${else}""${endif},
+"separator":false,"separator_block_width":5,"color" : ${if_match "${mpd_repeat}"=="On"}"\#ff8300"${else} "\#999999"${endif}},
+{ "full_text" :${if_mpd_playing}${if_match "${mpd_status}"=="Playing"}" ${scroll 22 2 ${mpd_smart}} |"${else} " ${scroll 22 2 ${mpd_smart}} |"${endif}${else}""${endif},
+"separator":false,"separator_block_width":8,"color":"\#ff8300"},
 
-{ "full_text" :\
-${if_mpd_playing}\
-${if_match "${mpd_random}"=="On"}\
-""\
-${else} ""\
-${endif}\
-${else}""${endif},
-"separator":false,
-"separator_block_width":3,
-"color" : ${if_match "${mpd_random}"=="On"}\
-"\#ff8300"\
-${else} "\#999999"\
-${endif}},
-{ "full_text" :\
-${if_mpd_playing}\
-${if_match "${mpd_repeat}"=="On"}""\
-${else} ""\
-${endif}\
-${else}""${endif},
-"separator":false,
-"separator_block_width":5,
-"color" : ${if_match "${mpd_repeat}"=="On"}\
-"\#ff8300"\
-${else} "\#999999"\
-${endif}},
-{ "full_text" : ${if_mpd_playing} ${if_match "${mpd_status}"=="Playing"}
-" ${scroll 22 2 ${mpd_smart}} |"\
-${else} " ${scroll 22 2 ${mpd_smart}} |"\
-${endif}\
-${else}""${endif},
-"separator":false,
-"separator_block_width":8,
-"color":"\#ff8300"},
 ####
   # wireless adapter
   ${if_existing /sys/class/net/wlan0/operstate up}
@@ -128,13 +98,13 @@ ${else}""${endif},
 
    # battery status
   {
-    "full_text": " ${exec ~/configs/dotfiles-master1/scripts/batteryicon} ${battery_percent BAT0}% ${format_time X"\hh \mm"} ",
+    "full_text": " ${exec ~/configs/dotfiles-master1/scripts/batteryicon} ${battery_percent BAT0}% ${format_time $battery_time BAT0"\hh\mm"} ",
     "color":"\#F4C242"
   },
    # system volume
   {
     "full_text": " ${exec ~/configs/dotfiles-master1/scripts/volumelevel.sh}% ",
-	  "color": ${if_empty ${exec ~/configs/dotfiles-master1-master1/scripts/ismute.sh | grep yes}}"\#D4F442"${else}"\#ffff00"${endif}
+	  "color": ${if_empty ${exec ~/configs/dotfiles-master1/scripts/ismute.sh | grep yes}}"\#D4F442"${else}"\#ffff00"${endif}
   },
   
   # date
@@ -147,7 +117,7 @@ ${else}""${endif},
   {
     "full_text" : " ${execi 300 ~/configs/dotfiles-master1/scripts/weather2.sh "Nagua"}" ,
     "separator":true, "separator_block_width":8,
-    "color":"\#B58900",
+    "color":"\#eaffd1",
    "align": "left"
   },
 
