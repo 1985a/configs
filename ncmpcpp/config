@@ -5,7 +5,8 @@
 ## Files ##
 ncmpcpp_directory = "~/.ncmpcpp"
 lyrics_directory = "~/.ncmpcpp/lyrics"
-##execute_on_song_change = "~/.ncmpcpp/songchange.sh"
+execute_on_song_change = "~/.ncmpcpp/cover.sh"
+mpd_music_dir ="~/Music"
 
 ## Unsupported mouse ##
 mouse_support = "yes"
@@ -49,10 +50,16 @@ state_line_color = "96"
 player_state_color = "10"
 state_flags_color = "4"
 main_window_color = "23"
-main_window_highlight_color = "11"
+##main_window_highlight_color = "11"  ## Deprecated option
+#new on .90 version
+current_item_prefix = "$(11)$r"
+current_item_suffix = "$/r$(end)"
+
 progressbar_elapsed_color = "198"
 statusbar_color = "27"
-active_column_color = "125"
+##active_column_color = "125"  ## Deprecated option
+current_item_inactive_column_prefix = "125"
+current_item_inactive_column_suffix = "125"
 
 ## Selected tracks ##
 selected_item_prefix = "* $6"
@@ -67,12 +74,23 @@ seek_time = "1"
 header_visibility = "yes"
 statusbar_visibility = "yes"
 titles_visibility = "yes"
+enable_window_title = "yes"
 
 ## Other ##
-now_playing_prefix = "$b "
+now_playing_prefix ="$b "
 #progressbar_look = "───"
 progressbar_look = "▀▀ "
 colors_enabled = "yes"
 autocenter_mode = "yes"
 centered_cursor = "yes"
 external_editor = "vim"
+
+visualizer_fifo_path = "/tmp/mpd.fifo"
+visualizer_output_name = "my_fifo"
+visualizer_sync_interval = "30"
+visualizer_in_stereo = "yes"
+#visualizer_type = "spectrum"
+visualizer_look = "+|"
+
+ask_for_locked_screen_width_part = 	no
+locked_screen_width_part =		50
