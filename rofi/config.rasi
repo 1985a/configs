@@ -3,7 +3,7 @@
  * existen en rofi 2.x; van aquí. No se ponen en el bindsym de sway porque sway
  * corta los comandos en cada ";" y rofi no llegaba a abrirse. */
 configuration {
-    modes: "run,drun";
+    modes: "drun,run";
     terminal: "kitty";
     matching: "fuzzy";
     show-icons: true;

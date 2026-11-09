@@ -261,9 +261,9 @@ for_window [app_id="org.kde.ktorrent"] floating enable, border pixel 2, resize s
 # for window that you might need to move, enable the following
 bindsym $mod+Shift+space floating toggle , border normal 1
 
-# lanzador: lista de comandos (modo run); Ctrl+Tab cambia a aplicaciones (drun).
-# Fuente, ancho y búsqueda difusa están en ~/.config/rofi/config.rasi
-bindsym $mod+p exec --no-startup-id rofi -show run
+# lanzador: aplicaciones con iconos (modo drun); Ctrl+Tab cambia a la lista de comandos (run).
+# Fuente, ancho, iconos y búsqueda difusa están en ~/.config/rofi/config.rasi
+bindsym $mod+p exec --no-startup-id rofi -show drun
 
 # added from other site
 #exec --no-startup-id pcmanfm ~
