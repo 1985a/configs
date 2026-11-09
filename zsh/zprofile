@@ -1,0 +1,8 @@
+
+# Created by `pipx` on 2022-04-30 19:00:33
+export PATH="$PATH:$HOME/.local/bin"
+
+#export XDG_CURRENT_DESKTOP=sway
+#export XDG_SESSION_TYPE=wayland
+#export WAYLAND_DISPLAY=wayland-0
+#export XDG_SESSION_DESKTOP=sway

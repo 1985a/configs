@@ -2,7 +2,7 @@
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
-ZSH=/usr/share/oh-my-zsh/
+ZSH=~/.oh-my-zsh/
 
 # Set name of the theme to load. Optionally, if you set this to "random"
 # it'll load a random theme each time that oh-my-zsh is loaded.
@@ -12,7 +12,7 @@ ZSH=/usr/share/oh-my-zsh/
 #ZSH_THEME="bullet-train"
 ZSH_THEME="agnoster"
 
-export TERM="xterm-256color"
+# DESACTIVADO: export TERM="xterm-256color"
 export EDITOR="vim"
 export USE_EDITOR=$EDITOR
 export VISUAL=$EDITOR
@@ -21,7 +21,14 @@ export SUDO_EDITOR=$EDITOR
 export PATH="$HOME/.node_modules_global/bin:$PATH"
 
 # powerline
-. /usr/lib/python3.6/site-packages/powerline/bindings/zsh/powerline.zsh
+# la ruta de powerline cambia con cada versión de python: se busca en vez de fijarla
+if command -v powerline-daemon >/dev/null; then
+  powerline-daemon -q
+  for _pl in /usr/lib/python3*/site-packages/powerline/bindings/zsh/powerline.zsh(N); do
+    . "$_pl"; break
+  done
+  unset _pl
+fi
 
 
 # Uncomment the following line to use case-sensitive completion.
@@ -32,7 +39,7 @@ export PATH="$HOME/.node_modules_global/bin:$PATH"
 # HYPHEN_INSENSITIVE="true"
 
 # Uncomment the following line to disable bi-weekly auto-update checks.
-DISABLE_AUTO_UPDATE="true"
+DISABLE_AUTO_UPDATE="false"
 
 # Uncomment the following line to change how often to auto-update (in days).
  export UPDATE_ZSH_DAYS=13
@@ -66,7 +73,7 @@ DISABLE_AUTO_UPDATE="true"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git colorize common-aliases fbterm git-extras history archlinux)
+plugins=(git colorize common-aliases fbterm git-extras history archlinux web-search encode64 chucknorris iwhois)
 
 
 # User configuration
@@ -84,7 +91,44 @@ plugins=(git colorize common-aliases fbterm git-extras history archlinux)
 # fi
 
 # Compilation flags
- export ARCHFLAGS="-arch x86_64"
+# export ARCHFLAGS="-arch x86_64"
+
+# Zen Ver1
+#export CFLAGS="-O2 -march=znver1"
+# via: https://www.phoronix.com/forums/forum/hardware/processors-memory/935871-the-impact-of-gcc-zen-compiler-tuning-on-amd-ryzen-performance/page6
+#export CFLAGS="-mprefer-avx128 -pipe -mtune=broadwell -march=znver1 -O2 -flto=12 -fuse-linker-plugin -fomit-frame-pointer -floop-interchange -floop-strip-mine -floop-block -fstack-protector-strong -fno-plt -funroll-loops"
+#export CXXFLAGS="${CFLAGS}"
+#export LDFLAGS="-Wl,--as-needed -Wl,-O1 -Wl,--hash-style=gnu -Wl,--sort-common,-z,relro,-z,now,-Wl,-V ${CFLAGS}"
+
+#export CFLAGS="-mtune=native -march=native -fstack-protector-strong"
+
+#export CFLAGS="-mprefer-avx128 -mavx2 -mcx16 -mmovbe -mf16c -mpopcnt -mbmi -mbmi2 -mclzero -mclflushopt -march=znver1"
+#export CXXFLAGS="${CFLAGS}"
+
+
+# On February 15/21 retroarch it shows me error if i compile using the flags options below
+#export CFLAGS="-pipe -mtune=znver3 -march=znver3 -O2 -flto=6 -fuse-linker-plugin -fomit-frame-pointer -floop-interchange -floop-strip-mine -floop-block -fno-strict-aliasing -D_FORTIFY_SOURCE=2"
+#Recomendaciones por chatgpt
+export CFLAGS="-pipe -mtune=znver3 -march=znver3 -O2 -flto=auto -fuse-linker-plugin -fomit-frame-pointer  -fno-strict-aliasing -D_FORTIFY_SOURCE=2"
+
+export CXXFLAGS="${CFLAGS}"
+#export LDFLAGS="-Wl,--as-needed -Wl,-O1 -Wl,--hash-style=gnu -Wl,--sort-common -lrt ${CFLAGS}"
+export LDFLAGS="-Wl,--as-needed -Wl,-O1 -Wl,--hash-style=gnu -Wl,--sort-common -lrt"
+
+
+
+# Today (11/10/22) I did add -fpie and -pie -z noexecstack
+# https://github.com/cemu-project/Cemu/pull/446
+# with this, no problem
+# CHOST="x86_64-pc-linux-gnu"
+# CFLAGS="-O2 -march=znver1 -pipe"
+# CXXFLAGS="${CFLAGS}"
+
+# On April 4 2023 i added this option -fno-strict-aliasing
+# in order to super metroid pc port work in the water section "spring ball" explicit
+# So according to the chatgpt
+# It's worth noting that this flag should be used with caution and only when necessary,
+# as disabling strict aliasing can potentially introduce subtle bugs into your code.
 
 # ssh
 # export SSH_KEY_PATH="~/.ssh/rsa_id"
@@ -106,7 +150,7 @@ fi
 source $ZSH/oh-my-zsh.sh
 
 # Hidden user from promt
-DEFAULT_USER="compadre"
+DEFAULT_USER="$USER"
 
 # zsh-syntax-highlighting
 source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
@@ -127,7 +171,7 @@ fancy-ctrl-z () {
  bindkey '^Z' fancy-ctrl-z
 
 # LC_COLORS
-eval $( dircolors -b $HOME/.dir_colors )
+eval "$(dircolors -b "$HOME/.scripts/dir_colors")"
 
 # optimize compilation
 #export {C,CXX}FLAGS='-O2 -fPIC -march=native -mtune=native -pipe -flto -fuse-linker-plugin'
@@ -135,3 +179,570 @@ eval $( dircolors -b $HOME/.dir_colors )
 #export LDFLAGS="${LDFLAGS} -fno-lto -flto -fuse-linker-plugin"
 
 #via: https://www.genbeta.com/a-fondo/como-poner-a-punto-tu-ordenador-con-linux-en-enero#c527087
+#
+#
+#ssh-agent 
+#via: https://wiki.archlinux.org/index.php?title=SSH_keys&redirect=no#SSH_agents
+if ! pgrep -u "$USER" ssh-agent > /dev/null; then
+    ssh-agent > ~/.ssh-agent-thing
+fi
+if [[ "$SSH_AGENT_PID" == "" ]]; then
+    eval "$(<~/.ssh-agent-thing)"
+fi
+
+# Default umask
+# via: https://www.cyberciti.biz/tips/understanding-linux-unix-umask-value-usage.html
+umask 022   # (antes "umask=022", que solo creaba una variable)
+
+PATH="$HOME/perl5/bin${PATH:+:${PATH}}"; export PATH;
+PERL5LIB="$HOME/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"; export PERL5LIB;
+PERL_LOCAL_LIB_ROOT="$HOME/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"; export PERL_LOCAL_LIB_ROOT;
+PERL_MB_OPT="--install_base \"$HOME/perl5\""; export PERL_MB_OPT;
+PERL_MM_OPT="INSTALL_BASE=$HOME/perl5"; export PERL_MM_OPT;
+
+# ccache
+#export PATH="/usr/lib/ccache/bin/:$PATH"
+
+#export PATH="/usr/lib/colorgcc/bin/:$PATH"
+#export CCACHE_PATH="/usr/bin"
+#
+export USE_CCACHE=1
+export CCACHE_EXEC=/usr/bin/ccache
+
+[[ -x ~/.vocab ]] && ~/.vocab
+alias clear="clear;~/.vocab"
+
+
+# TwitchTV
+function tw () { streamlink "twitch.tv/$1" "${2:-best}"; }
+
+# Matlab
+export MKL_DEBUG_CPU_TYPE=5
+
+alias myip="curl -fsS https://ipecho.net/plain; echo"
+
+# Creates an archive (.tar.gz) from given directory.
+function maketar() { tar cvzf "${1%%/}.tar.gz" "${1%%/}/"; }
+
+# create a zip archive of a file or folder.
+function makezip() { zip -r "${1%%/}.zip" "$1" ; }
+
+alias super7="7z a -t7z -m0=lzma -mx=9 -mfb=64 -md=32m -ms=on"
+
+# hid-nintendo SDL2 mappings
+export SDL_GAMECONTROLLERCONFIG="050000007e0500000920000001800000,Nintendo Switch Pro Controller,platform:Linux,a:b0,b:b1,x:b3,y:b2,back:b9,guide:b11,start:b10,leftstick:b12,rightstick:b13,leftshoulder:b5,rightshoulder:b6,dpup:b14,dpdown:b15,dpleft:b16,dpright:b17,leftx:a0,lefty:a1,rightx:a2,righty:a3,lefttrigger:b7,righttrigger:b8,
+030000007e0500000920000011810000,Nintendo Switch Pro Controller,platform:Linux,a:b0,b:b1,x:b3,y:b2,back:b9,guide:b11,start:b10,leftstick:b12,rightstick:b13,leftshoulder:b5,rightshoulder:b6,dpup:h0.1,dpdown:h0.4,dpleft:h0.8,dpright:h0.2,leftx:a0,lefty:a1,rightx:a2,righty:a3,lefttrigger:b7,righttrigger:b8,
+060000007e0500000620000000000000,Nintendo Switch Combined Joy-Cons,platform:Linux,a:b0,b:b1,x:b3,y:b2,back:b9,guide:b11,start:b10,leftstick:b12,rightstick:b13,leftshoulder:b5,rightshoulder:b6,dpup:b14,dpdown:b15,dpleft:b16,dpright:b17,leftx:a0,lefty:a1,rightx:a2,righty:a3,lefttrigger:b7,righttrigger:b8,
+"
+
+#setup ps1light PS3DEV
+  ## Setup ps3toolchain environment
+    export PS3DEV=/var/cache/pacman/ps3dev
+    export PATH=$PATH:$PS3DEV/bin
+    export PATH=$PATH:$PS3DEV/ppu/bin
+    export PATH=$PATH:$PS3DEV/spu/bin
+    ## Setup PSL1GHT Environment
+    export PSL1GHT=$PS3DEV/psl1ght
+    export PATH=$PATH:$PSL1GHT/host/bin
+
+# Turn numlock on
+#setleds -D +num
+# Colors in less
+export LESS_TERMCAP_mb=$'\E[01;31m'
+export LESS_TERMCAP_md=$'\E[01;31m'
+export LESS_TERMCAP_me=$'\E[0m'
+export LESS_TERMCAP_se=$'\E[0m'
+export LESS_TERMCAP_so=$'\E[01;44;33m'
+export LESS_TERMCAP_ue=$'\E[0m'
+export LESS_TERMCAP_us=$'\E[01;32m'
+
+# goland
+export PATH=$PATH:$HOME/go/bin:/usr/local/go/bin
+
+QT_SELECT=5
+
+# Fix OBS scaling factor QT
+#QT_AUTO_SCREEN_SCALE_FACTOR=0
+#
+#What is my ip
+# https://unix.stackexchange.com/a/81699/37512
+alias wanip='dig @resolver4.opendns.com myip.opendns.com +short' 
+alias wanip4='dig @resolver4.opendns.com myip.opendns.com +short -4'
+alias wanip6='dig @resolver1.ipv6-sandbox.opendns.com AAAA myip.opendns.com +short -6'
+alias mpvYT='mpv --ytdl-format="((bestvideo[height<=?2160][vcodec!=vp9][vcodec!=av1]/bestvideo[height<=?2160][vcodec!=av1]/bestvideo[height<=?2160][vcodec!=vp9]/bestvideo[height<=?2160])+bestaudio)/best" --ytdl-raw-options=add-header="Cookie:",concurrent-fragments=10 --loop-playlist --force-window "$url"'
+
+alias ipman='ip -h -c -p'
+
+alias ultimo='eza -abghHliS -s modified'   # exa está abandonado; eza es su sucesor
+
+# Created by `pipx` on 2022-04-30 19:00:33
+export PATH="$PATH:$HOME/.local/bin"
+
+# autocomplete pipx completetions
+autoload -U bashcompinit
+bashcompinit
+eval "$(register-python-argcomplete pipx)"
+
+# nmap
+# https://blog.lrvt.de/nmap-to-html-report/
+function getports() {
+        nmap_file=$1
+        RED='\033[0;31m'
+        NC='\033[0m' # No Color
+        if [[ "$nmap_file" == *".nmap"* ]];then
+                ports=$(grep " open " "$nmap_file" | grep -e tcp -e udp | cut -d"/" -f1 | sort | uniq | tr "\n" "," | sed 's/.$//')
+                echo $ports && echo
+        else
+                echo -e "${RED}Only .NMAP format supported! Exiting..${NC}"
+        fi
+}
+
+# to compile sameboy needs these variables
+#export CC=/usr/bin/clang
+#export CXX=/usr/bin/clang++
+
+# Know is a port is open or closed|filtered
+# (un alias no recibe argumentos: $1 y $2 quedaban vacíos)
+scanport() { nc -zv -w 2 "$1" "$2"; }
+
+# Generate the wifi guest network qrcode image
+
+# SSID y clave en ~/.config/zsh/local.zsh (WIFI_GUEST_SSID / WIFI_GUEST_PASS)
+qrwifi() {
+  [[ -n "${WIFI_GUEST_SSID:-}" && -n "${WIFI_GUEST_PASS:-}" ]] || { echo "Define WIFI_GUEST_SSID y WIFI_GUEST_PASS en ~/.config/zsh/local.zsh" >&2; return 1; }
+  qrencode -t utf8 "WIFI:T:WPA2-PSK;S:${WIFI_GUEST_SSID};P:${WIFI_GUEST_PASS};FT:T;;"
+}
+
+# From chatpgt, move files > Dont work
+function movefiles() {
+  # Check if both source and destination directories are provided as arguments
+  if [ "$#" -ne 2 ]; then
+    echo "Usage: movefiles <source_directory> <destination_directory>"
+    return 1
+  fi
+
+  source_dir="$1"
+  destination_dir="$2"
+
+  # Move all files from source to destination
+  find "$source_dir" -type f -print0 | xargs -0 -r mv -t "$destination_dir"
+}
+
+
+#VCPKG_ROOT=/opt/vcpkg
+#VCPKG_DOWNLOADS=/var/cache/vcpkg
+#compilacion rapida en steam cache
+DXVK_NUM_THREADS=$(nproc)
+
+# coordenadas en ~/.config/zsh/local.zsh (WLSUNSET_LAT / WLSUNSET_LON)
+filtroazul() { wlsunset -l "${WLSUNSET_LAT:?define WLSUNSET_LAT en ~/.config/zsh/local.zsh}" -L "${WLSUNSET_LON:?define WLSUNSET_LON}" -T 6500 -t 4500 -g 1.0 &! }
+
+alias retroarch-lowlatency='PIPEWIRE_LATENCY="128/48000" retroarch'
+
+# amule wayland fix
+#
+export WXSUPRESS_SIZER_FLAGS_CHECK=1
+
+# Obtener las ultimas de archlinux, si hay un paquete roto o necesita intervencion manual
+#
+# La caché la escribe ~/.scripts/scripts/archnews-check.sh (temporizador systemd
+# archnews-check.timer). Abrir la terminal ya no hace peticiones de red: solo lee
+# la caché y, si tiene más de un día, la refresca en segundo plano.
+function show_arch_latest_important_news() {
+  local cache_file="${XDG_CACHE_HOME:-$HOME/.cache}/archnews-latest.txt"
+  local checker="$HOME/.scripts/scripts/archnews-check.sh"
+  [[ -r "$cache_file" ]] && cat "$cache_file"
+  if [[ -x "$checker" && ( ! -f "$cache_file" || -n $(find "$cache_file" -mmin +1440 2>/dev/null) ) ]]; then
+    "$checker" >/dev/null 2>&1 &!
+  fi
+}
+show_arch_latest_important_news
+
+alias zhistory="awk -F ';' -v OFS=';' '{ if (\$1 ~ /^:/) { split(\$1, a, \":\"); cmd=\$2; \"date -d @\"a[2]\" \"+%Y-%m-%d %H:%M:%S\"\" | getline d; print d, \$2 } else { print \"\" , \$0 } }' ~/.zsh_history"
+
+codebin() {
+  emulate -L zsh
+
+  # ===== CONFIG =====
+  # la clave va en ~/.config/zsh/local.zsh:  export CODEBIN_KEY="..."
+  local CODEBIN_KEY="${CODEBIN_KEY:-}"
+  # =======================================
+
+  command -v curl >/dev/null 2>&1 || { echo "ERROR: falta curl" >&2; return 127; }
+  command -v python3 >/dev/null 2>&1 || { echo "ERROR: falta python3" >&2; return 127; }
+
+  local base="https://www.codebin.cc"
+  local upload_ep="${base}/api/v1/uploadPaste"
+  local all_ep="${base}/api/v1/getAllPastes"
+
+  local lang="shell"
+  local title=""
+  local desc=""
+  local expiry="never"   # tu backend aceptó "never"
+  local pass=""
+  local list=0
+
+  while getopts "l:t:d:e:p:Lh" opt; do
+    case "$opt" in
+      l) lang="$OPTARG" ;;
+      t) title="$OPTARG" ;;
+      d) desc="$OPTARG" ;;
+      e) expiry="$OPTARG" ;;
+      p) pass="$OPTARG" ;;
+      L) list=1 ;;
+      h)
+        cat <<'EOF'
+Uso:
+  comando | codebin [-l lenguaje] [-t titulo] [-d descripcion] [-e expiracion] [-p password]
+  codebin archivo
+
+Ejemplos (zsh):
+  cat pci_latency.sh | codebin -t "pci_latency.sh" -l shell
+  codebin pci_latency.sh -t "pci_latency.sh" -l shell
+  DEBUG=1 codebin -t "prueba" -l shell <<<"hola"
+EOF
+        return 0
+        ;;
+      *) echo "Opción inválida" >&2; return 2 ;;
+    esac
+  done
+  shift $((OPTIND - 1))
+
+  if [[ -z "$CODEBIN_KEY" || "$CODEBIN_KEY" == "PEGA_TU_API_KEY_AQUI" ]]; then
+    echo "ERROR: define CODEBIN_KEY en ~/.config/zsh/local.zsh" >&2
+    return 2
+  fi
+
+  # (Opcional) -L: solo prueba que tienes acceso a getAllPastes
+  if [[ $list -eq 1 ]]; then
+    curl -sS -H "Authorization: ${CODEBIN_KEY}" "$all_ep" | head
+    return 0
+  fi
+
+  # Leer contenido (stdin o archivo)
+  local content="" src_name="stdin"
+  if [[ -t 0 ]]; then
+    if [[ -n "${1:-}" ]]; then
+      src_name="${1:t}"
+      content="$(cat -- "$1")" || return 1
+    else
+      echo "ERROR: no recibí stdin ni archivo. Ej: dmesg | codebin  o  codebin archivo.txt" >&2
+      return 2
+    fi
+  else
+    content="$(cat)" || return 1
+  fi
+
+  [[ -n "$title" ]] || title="$src_name"
+  [[ -n "$desc"  ]] || desc="Uploaded from terminal"
+
+  # Payload JSON
+  local payload
+  payload="$(
+    CB_LANGUAGE="$lang" CB_TITLE="$title" CB_DESC="$desc" CB_EXP="$expiry" CB_PASS="$pass" CB_CODE="$content" \
+    python3 - <<'PY'
+import json, os
+data = {
+  "language": os.environ.get("CB_LANGUAGE","shell"),
+  "title": os.environ.get("CB_TITLE","stdin") or "stdin",
+  "description": os.environ.get("CB_DESC","Uploaded from terminal") or "Uploaded from terminal",
+  "expiration": os.environ.get("CB_EXP","never") or "never",
+  "password": os.environ.get("CB_PASS",""),
+  "code": os.environ.get("CB_CODE",""),
+}
+print(json.dumps(data, ensure_ascii=False))
+PY
+  )" || return 1
+
+  # POST capturando HEADERS + BODY
+  local hdr body
+  hdr="$(mktemp)" || return 1
+  body="$(mktemp)" || { rm -f "$hdr"; return 1; }
+
+  curl -sS -D "$hdr" -o "$body" -X POST "$upload_ep" \
+    -H "Authorization: ${CODEBIN_KEY}" \
+    -H "Content-Type: application/json" \
+    --data-binary "$payload" || { rm -f "$hdr" "$body"; return 1; }
+
+  local resp
+  resp="$(cat "$body")"
+
+  if [[ "${DEBUG:-0}" == "1" ]]; then
+    echo "---- payload ----" >&2
+    echo "$payload" >&2
+    echo "---- headers ----" >&2
+    cat "$hdr" >&2
+    echo "---- body ----" >&2
+    echo "$resp" >&2
+    echo "-----------------" >&2
+  fi
+
+  # 1) Intentar extraer URL/ID del BODY
+  local url id
+  url="$(python3 - <<'PY' "$resp" 2>/dev/null || true
+import json, re, sys
+s=sys.argv[1]
+try:
+  j=json.loads(s)
+  if isinstance(j,dict):
+    for k in ("url","link","pasteUrl","paste_url"):
+      v=j.get(k)
+      if isinstance(v,str) and v.startswith("http"):
+        print(v); raise SystemExit
+    for k in ("id","slug","key","pasteId","paste_id"):
+      v=j.get(k)
+      if isinstance(v,str) and v.strip():
+        print("https://www.codebin.cc/" + v.strip()); raise SystemExit
+except Exception:
+  pass
+m=re.search(r'https?://(?:www\.)?codebin\.cc/\S+', s)
+if m: print(m.group(0))
+PY
+)"
+  if [[ -n "$url" ]]; then
+    rm -f "$hdr" "$body"
+    echo "$url"
+    return 0
+  fi
+
+  # 2) Intentar extraer ID desde HEADERS (Location / X-Paste-Id / etc.)
+  id="$(
+    awk 'BEGIN{IGNORECASE=1}
+         /^location:/{gsub(/\r/,""); print $0}
+         /^x-paste-id:/{gsub(/\r/,""); print $0}
+         /^x-id:/{gsub(/\r/,""); print $0}' "$hdr" \
+    | head -n 1 \
+    | sed -E 's/^[^:]+:[[:space:]]*//; s#https?://[^/]+/##; s#[[:space:]]+$##'
+  )"
+
+  if [[ -n "$id" ]]; then
+    rm -f "$hdr" "$body"
+    echo "https://www.codebin.cc/$id"
+    return 0
+  fi
+
+  # 3) Si el body dice success pero sin link, consultar getAllPastes y agarrar el más reciente
+  local all
+  all="$(curl -sS -H "Authorization: ${CODEBIN_KEY}" "$all_ep")"
+
+  id="$(python3 - <<'PY' "$all" 2>/dev/null || true
+import json, sys, datetime
+
+raw=sys.argv[1]
+try:
+  j=json.loads(raw)
+except Exception:
+  print(""); raise SystemExit
+
+# recolectar dicts que tengan posibles ids
+cands=[]
+def walk(x):
+  if isinstance(x,list):
+    for i in x: walk(i)
+  elif isinstance(x,dict):
+    # si parece un "paste" (tiene id/slug/key)
+    keys=("id","slug","key","pasteId","paste_id")
+    if any(isinstance(x.get(k), (str,int)) for k in keys):
+      cands.append(x)
+    for v in x.values(): walk(v)
+walk(j)
+
+def get_id(d):
+  for k in ("id","slug","key","pasteId","paste_id"):
+    v=d.get(k)
+    if isinstance(v,(str,int)) and str(v).strip():
+      return str(v).strip()
+  return None
+
+def get_time(d):
+  for k in ("createdAt","created_at","created","date","timestamp"):
+    v=d.get(k)
+    if isinstance(v,(int,float)):
+      return float(v)
+    if isinstance(v,str) and v.strip():
+      s=v.strip()
+      # intentar iso8601 simple
+      try:
+        dt=datetime.datetime.fromisoformat(s.replace("Z","+00:00"))
+        return dt.timestamp()
+      except Exception:
+        pass
+  return 0.0
+
+# elegir el candidato con mayor timestamp; si no hay timestamps, el primero
+best=None
+best_t=-1
+for d in cands:
+  pid=get_id(d)
+  if not pid: 
+    continue
+  t=get_time(d)
+  if t>best_t:
+    best_t=t
+    best=pid
+
+print(best or "")
+PY
+)"
+
+  rm -f "$hdr" "$body"
+
+  if [[ -n "$id" ]]; then
+    echo "https://www.codebin.cc/$id"
+    return 0
+  fi
+
+  echo "ERROR: Subió (o el API dijo success) pero no pude obtener ID/URL." >&2
+  echo "Sugerencia: en el navegador, abre Network y copia como cURL la petición real a /api/v1/uploadPaste para ver qué devuelve." >&2
+  return 1
+}
+
+# Matiene el dbus correcto en la terminal
+if [ -n "$XDG_RUNTIME_DIR" ] && [ -S "$XDG_RUNTIME_DIR/bus" ]; then
+    export DBUS_SESSION_BUS_ADDRESS="unix:path=$XDG_RUNTIME_DIR/bus"
+fi
+
+lastdump_gdb() {
+    # Uso:
+    #   lastdump_gdb spcplay-pw
+    #   lastdump_gdb spc2wav
+    #   lastdump_gdb test_initapu
+    #
+    # Opcional:
+    #   lastdump_gdb spc2wav after_emuspc_ram_pointer_fix1
+
+    local prog="$1"
+    local tag="${2:-auto}"
+    local list line pid exe base core out cwd
+
+    if [ -z "$prog" ]; then
+        echo "Uso:"
+        echo "  lastdump_gdb spcplay-pw"
+        echo "  lastdump_gdb spc2wav"
+        echo "  lastdump_gdb test_initapu"
+        return 1
+    fi
+
+    cwd="$(pwd)"
+
+    list="$(
+        coredumpctl list --no-pager --no-legend 2>/dev/null | tail -50
+    )"
+
+    if [ -z "$list" ]; then
+        echo "ERROR: coredumpctl no devolvio coredumps."
+        echo "Prueba:"
+        echo "  coredumpctl list | tail -50"
+        return 1
+    fi
+
+    line="$(
+        printf '%s\n' "$list" \
+        | grep -E "/${prog}$| ${prog}$" \
+        | tail -n 1
+    )"
+
+    if [ -z "$line" ]; then
+        echo "ERROR: No encontre coredump reciente para: $prog"
+        echo
+        echo "Ultimos 50 coredumps:"
+        printf '%s\n' "$list"
+        return 1
+    fi
+
+    pid="$(printf '%s\n' "$line" | awk '{print $5}')"
+    exe="$(printf '%s\n' "$line" | awk '{print $NF}')"
+    base="$(basename "$exe")"
+
+    if [ -z "$pid" ] || [ -z "$exe" ]; then
+        echo "ERROR: No pude extraer PID o ejecutable desde:"
+        echo "$line"
+        return 1
+    fi
+
+    if [ ! -x "$exe" ]; then
+        echo "AVISO: El ejecutable original no existe o no es ejecutable:"
+        echo "  $exe"
+        echo "Intentando usar ./$base"
+        exe="./$base"
+    fi
+
+    if [ ! -x "$exe" ]; then
+        echo "ERROR: No existe ./$base o no es ejecutable."
+        echo "Ejecuta esto desde el directorio donde esta el binario."
+        return 1
+    fi
+
+    core="${cwd}/core.${tag}.${base}.${pid}"
+    out="${cwd}/64bit_crash_${tag}_${base}_${pid}_gdb.txt"
+
+    echo "Coredump elegido:"
+    echo "  $line"
+    echo
+    echo "PID        : $pid"
+    echo "Ejecutable: $exe"
+    echo "Core       : $core"
+    echo "Reporte    : $out"
+    echo
+
+    coredumpctl dump "$pid" -o "$core"
+    if [ $? -ne 0 ]; then
+        echo "ERROR: fallo coredumpctl dump."
+        return 1
+    fi
+
+    if [ ! -s "$core" ]; then
+        echo "ERROR: El core no se genero o esta vacio:"
+        echo "  $core"
+        return 1
+    fi
+
+    DEBUGINFOD_URLS="" gdb -nx -batch -q \
+      -ex "set debuginfod enabled off" \
+      -ex "file $exe" \
+      -ex "core-file $core" \
+      -ex "set pagination off" \
+      -ex "bt full" \
+      -ex "frame 0" \
+      -ex "info registers" \
+      -ex "x/180i \$pc-120" \
+      -ex "x/180gx \$rsp-160" \
+      -ex "info symbol \$pc" \
+      -ex "info sharedlibrary" \
+      -ex "quit" \
+      > "$out" 2>&1
+
+    if [ ! -f "$out" ]; then
+        echo "ERROR: El archivo .txt no fue creado."
+        return 1
+    fi
+
+    if [ ! -s "$out" ]; then
+        echo "ERROR: El archivo .txt fue creado pero esta vacio:"
+        echo "  $out"
+        return 1
+    fi
+
+    echo "OK: archivos generados:"
+    echo "  $core"
+    echo "  $out"
+    echo
+    echo "Vista rapida del reporte:"
+    head -40 "$out"
+}
+
+
+export ANDROID_HOME="$HOME/Android/Sdk"
+export ANDROID_SDK_ROOT="$HOME/Android/Sdk"
+export PATH="$PATH:$ANDROID_HOME/platform-tools"
+export PATH="$PATH:$ANDROID_HOME/cmdline-tools/latest/bin"
+
+## pipewire audio manager
+export PATH="$HOME/.config/audio-profiles/bin:$PATH"
+
+# Evitar preguntas de autocorrección al ejecutar scripts
+unsetopt CORRECT CORRECT_ALL
+
+# Valores privados de esta máquina (claves, coordenadas, wifi...). No está en el
+# repositorio; ver local.example/zsh-local.zsh
+[[ -r "${XDG_CONFIG_HOME:-$HOME/.config}/zsh/local.zsh" ]] && . "${XDG_CONFIG_HOME:-$HOME/.config}/zsh/local.zsh"

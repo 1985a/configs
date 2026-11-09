@@ -1,0 +1,6 @@
+[Unit]
+Description=Check for important Arch Linux news
+
+[Service]
+Type=oneshot
+ExecStart=%h/.scripts/scripts/archnews-check.sh

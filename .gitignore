@@ -1,0 +1,12 @@
+# copias de seguridad y restos que no deben subirse
+*.bak
+*.bak-*
+*.log
+*.pos
+*.part.*
+*~
+# valores privados (por si alguien los copia aquí por error)
+/local.zsh
+/home-scripts.env
+/weather-location
+/.gitconfig.local

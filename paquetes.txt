@@ -1,0 +1,52 @@
+# Paquetes de Arch Linux que usan estas configuraciones.
+# Instalar:  sudo pacman -S --needed $(grep -v '^#' paquetes.txt | cut -d' ' -f1)
+# (conky, oh-my-zsh y los opcionales se explican en el README)
+
+# escritorio
+sway
+swaybg
+swaylock
+mako
+libnotify
+rofi
+pcmanfm
+grim
+slurp
+wl-clipboard
+gnome-keyring
+lxqt-policykit
+glib2
+conky
+
+# barra de estado (scripts de ~/.scripts/scripts)
+curl
+jq
+iw
+libpulse
+bluez-utils
+pacman-contrib
+
+# música
+mpd
+mpc
+ncmpcpp
+ffmpeg
+file
+kid3-common
+yt-dlp
+mpv
+
+# terminal y shell
+kitty
+tmux
+zsh
+zsh-syntax-highlighting
+powerline
+eza
+gawk
+qrencode
+wlsunset
+
+# fuentes
+ttf-jetbrains-mono-nerd
+ttf-nerd-fonts-symbols-mono

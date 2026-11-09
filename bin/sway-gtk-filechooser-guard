@@ -1,0 +1,171 @@
+#!/usr/bin/env bash
+# Evita que el selector de archivos de GTK se abra más grande que el monitor más
+# pequeño (o fuera de pantalla) cuando hay monitores de distinto tamaño en sway.
+# Lo lanza ~/.config/i3/config con "exec".
+set -u
+
+SCHEMA='org.gtk.Settings.FileChooser'
+# Registro de cambios en ~/.local/state (antes iba a ~/Downloads)
+LOG="${XDG_STATE_HOME:-$HOME/.local/state}/sway-filechooser-guard.log"
+LOCK="${XDG_RUNTIME_DIR:-/tmp}/sway-gtk-filechooser-guard.lock"
+FIFO="${XDG_RUNTIME_DIR:-/tmp}/sway-gtk-filechooser-guard.fifo.$$"
+
+mkdir -p "$(dirname "$LOG")"
+
+log() {
+    printf '%s  %s\n' "$(date '+%F %T')" "$*" >> "$LOG"
+}
+
+# Este guardián solamente puede funcionar dentro de una sesión Sway real.
+if [[ -z "${SWAYSOCK:-}" ]] || ! swaymsg -t get_version >/dev/null 2>&1; then
+    exit 0
+fi
+
+for cmd in swaymsg gsettings jq flock mkfifo; do
+    command -v "$cmd" >/dev/null 2>&1 || {
+        log "ERROR: falta dependencia: $cmd"
+        exit 1
+    }
+done
+
+# Evita tener varias copias si se recarga Sway.
+exec 9>"$LOCK"
+flock -n 9 || exit 0
+
+# Conservamos exactamente lo que había antes de arrancar el guardián.
+ORIG_SIZE="$(gsettings get "$SCHEMA" window-size 2>/dev/null || true)"
+ORIG_POS="$(gsettings get "$SCHEMA" window-position 2>/dev/null || true)"
+
+P1=''
+P2=''
+P3=''
+P4=''
+CLEANED=0
+
+cleanup() {
+    (( CLEANED == 1 )) && return 0
+    CLEANED=1
+
+    [[ -n "$P1" ]] && kill "$P1" 2>/dev/null || true
+    [[ -n "$P2" ]] && kill "$P2" 2>/dev/null || true
+    [[ -n "$P3" ]] && kill "$P3" 2>/dev/null || true
+    [[ -n "$P4" ]] && kill "$P4" 2>/dev/null || true
+
+    rm -f "$FIFO"
+
+    # Al abandonar Sway se restauran los valores originales.
+    if [[ "$ORIG_SIZE" =~ ^\([0-9]+,[[:space:]]*[0-9]+\)$ ]]; then
+        gsettings set "$SCHEMA" window-size "$ORIG_SIZE" 2>/dev/null || true
+    fi
+
+    if [[ "$ORIG_POS" =~ ^\(-?[0-9]+,[[:space:]]*-?[0-9]+\)$ ]]; then
+        gsettings set "$SCHEMA" window-position "$ORIG_POS" 2>/dev/null || true
+    fi
+
+    log "STOP: Sway terminó; restaurados size=$ORIG_SIZE pos=$ORIG_POS"
+}
+
+trap cleanup EXIT
+trap 'cleanup; exit 0' HUP INT TERM
+
+get_bounds() {
+    swaymsg -t get_outputs -r 2>/dev/null | jq -r '
+        ([.[] | select(.active == true) | .rect.width] | min) as $w |
+        ([.[] | select(.active == true) | .rect.height] | min) as $h |
+        if ($w == null or $h == null)
+        then empty
+        else "\($w) \($h)"
+        end
+    '
+}
+
+clamp_chooser() {
+    local bounds minw minh maxw maxh
+    local size pos w h x y nw nh
+    local changed=0
+
+    bounds="$(get_bounds)"
+    [[ -n "$bounds" ]] || return 0
+
+    read -r minw minh <<< "$bounds"
+
+    # Dejamos 80 px de margen para barra y bordes.
+    maxw=$(( minw - 80 ))
+    maxh=$(( minh - 80 ))
+
+    (( maxw < 640 )) && maxw=640
+    (( maxh < 600 )) && maxh=600
+
+    size="$(gsettings get "$SCHEMA" window-size 2>/dev/null || true)"
+
+    if [[ "$size" =~ ^\(([0-9]+),[[:space:]]*([0-9]+)\)$ ]]; then
+        w="${BASH_REMATCH[1]}"
+        h="${BASH_REMATCH[2]}"
+
+        nw="$w"
+        nh="$h"
+
+        (( nw > maxw )) && nw="$maxw"
+        (( nh > maxh )) && nh="$maxh"
+
+        if (( nw != w || nh != h )); then
+            gsettings set "$SCHEMA" window-size "($nw, $nh)"
+            changed=1
+
+            log "CLAMP size: ($w,$h) -> ($nw,$nh); limite=${maxw}x${maxh}; salida_min=${minw}x${minh}"
+        fi
+    fi
+
+    pos="$(gsettings get "$SCHEMA" window-position 2>/dev/null || true)"
+
+    if [[ "$pos" =~ ^\((-?[0-9]+),[[:space:]]*(-?[0-9]+)\)$ ]]; then
+        x="${BASH_REMATCH[1]}"
+        y="${BASH_REMATCH[2]}"
+
+        if (( x < 0 || y < 0 || x > minw - 100 || y > minh - 100 )); then
+            gsettings set "$SCHEMA" window-position '(40, 40)'
+            changed=1
+
+            log "CLAMP position: ($x,$y) -> (40,40)"
+        fi
+    fi
+
+    (( changed == 0 )) && return 0
+}
+
+log "START: Sway detectado; original size=$ORIG_SIZE pos=$ORIG_POS"
+
+# Corrección inicial.
+clamp_chooser
+
+rm -f "$FIFO"
+mkfifo "$FIFO"
+
+# Vigila cuando GTK guarda un tamaño nuevo.
+gsettings monitor "$SCHEMA" window-size > "$FIFO" 2>/dev/null &
+P1=$!
+
+# Vigila también la posición.
+gsettings monitor "$SCHEMA" window-position > "$FIFO" 2>/dev/null &
+P2=$!
+
+# Si cambia la configuración de monitores, recalcula los límites.
+swaymsg -m -t subscribe '["output"]' > "$FIFO" 2>/dev/null &
+P3=$!
+
+# Detecta que Sway haya terminado.
+PARENT_PID="$BASHPID"
+
+(
+    while swaymsg -t get_version >/dev/null 2>&1; do
+        sleep 2
+    done
+
+    kill -TERM "$PARENT_PID" 2>/dev/null || true
+) &
+P4=$!
+
+while IFS= read -r _; do
+    sleep 0.05
+    clamp_chooser
+done < "$FIFO"

@@ -1,0 +1,15 @@
+#
+# ~/.bash_profile
+#
+
+[[ -f ~/.bashrc ]] && . ~/.bashrc
+
+if [[ -z $DISPLAY ]] && [[ $(tty) = /dev/tty2 ]]; then
+	XKB_DEFAULT_LAYOUT=us exec sway
+fi
+[ -f "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"
+
+#export XDG_CURRENT_DESKTOP=sway
+#export XDG_SESSION_TYPE=wayland
+#export WAYLAND_DISPLAY=wayland-0
+#export XDG_SESSION_DESKTOP=sway

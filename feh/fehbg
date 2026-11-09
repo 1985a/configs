@@ -1,2 +1,0 @@
-#!/usr/bin/bash
-feh  --bg-scale '$HOME/.dotfiles/feh/background.jpg' 

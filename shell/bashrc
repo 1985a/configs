@@ -1,0 +1,27 @@
+#
+# ~/.bashrc
+#
+
+# If not running interactively, don't do anything
+[[ $- != *i* ]] && return
+
+alias ls='ls --color=auto'
+PS1='[\u@\h \W]\$ '
+
+[[ -x ~/.vocab ]] && ~/.vocab
+alias clear="clear;~/.vocab"
+
+alias myip="curl -fsS https://ipecho.net/plain; echo"
+
+# Creates an archive (*.tar.gz) from given directory.
+function maketar() { tar cvzf "${1%%/}.tar.gz"  "${1%%/}/"; }
+
+# Create a ZIP archive of a file or folder.
+function makezip() { zip -r "${1%%/}.zip" "$1" ; }
+
+alias super7="7z a -t7z -m0=lzma -mx=9 -mfb=64 -md=32m -ms=on"
+
+# turn on numlock after login
+# setleds solo funciona en la consola de texto (tty), no en una terminal gráfica
+[[ $(tty) == /dev/tty[0-9]* ]] && setleds -D +num
+[ -f "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"

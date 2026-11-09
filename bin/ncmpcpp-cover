@@ -1,0 +1,12 @@
+#!/bin/bash
+# ncmpcpp con un panel de carátula a la izquierda (~/.ncmpcpp/cover_pane.sh).
+# Dentro de tmux abre el panel y lo cierra al salir de ncmpcpp; fuera de tmux abre
+# ncmpcpp normal.
+
+if [[ -z "$TMUX" ]]; then
+    exec ncmpcpp "$@"
+fi
+
+pane=$(tmux split-window -hbd -l 35% -P -F '#{pane_id}' "$HOME/.ncmpcpp/cover_pane.sh")
+trap 'tmux kill-pane -t "$pane" 2>/dev/null' EXIT
+ncmpcpp "$@"

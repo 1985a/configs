@@ -1,0 +1,20 @@
+# ~/.gitconfig compartido. Tu nombre, correo y los "safe.directory" de esta
+# máquina van en ~/.gitconfig.local (no se sube al repositorio), por ejemplo:
+#
+#   [user]
+#       name = Tu Nombre
+#       email = tu@correo
+#
+# install.sh lo crea a partir de tu ~/.gitconfig anterior si no existe.
+[include]
+	path = ~/.gitconfig.local
+[core]
+	editor = vim
+[init]
+	defaultBranch = main
+[credential "https://github.com"]
+	helper =
+	helper = !/usr/bin/gh auth git-credential
+[credential "https://gist.github.com"]
+	helper =
+	helper = !/usr/bin/gh auth git-credential

@@ -1,0 +1,9 @@
+[Unit]
+Description=Run Arch Linux news check daily at 7 PM
+
+[Timer]
+OnCalendar=*-*-* 19:00:00
+Persistent=true
+
+[Install]
+WantedBy=timers.target

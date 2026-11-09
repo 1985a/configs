@@ -1,0 +1,511 @@
+# Configuración de sway (sway lee ~/.config/i3/config si no existe ~/.config/sway/config).
+# Comprobar sin reiniciar:  sway -C -c ~/.config/i3/config
+
+smart_gaps on
+smart_borders on
+gaps inner 5
+gaps outer 5
+
+# Ventanas sin titulo y sin bordes
+for_window [class="^.*"] border none
+
+
+# Perfil del color del monitor SAMSUNG G5 (archivo .icm propio de este monitor;
+# en otra máquina cambia la ruta o comenta la línea)
+ output DP-2 color_profile icc /mnt/disco16t/shared_win/perfiles-colors-monitors/S32DG50xE.icm
+
+
+# VRR sway
+#output * adaptive_sync on
+# Apagado por ahora debido a un bug en sway, consume 100watts la grafica solo por estar asi
+# Resolucion y Herzios
+#output DP-1 mode 1920x1080@74.924Hz
+
+# Monitor Samsung HDMI output
+# output HDMI-A-1 mode 2560x1440@120Hz adaptive_sync on
+
+# Monitor samsung a 120Hz
+output DP-2 mode 2560x1440@120Hz
+output DP-2 pos 1920 0
+
+# Enable HDR 
+output DP-2 render_bit_depth 10
+output DP-2 hdr off
+
+
+# Monitor viewsonic
+output DP-3 mode 1920x1080@74hz
+output DP-3 pos 0 0
+
+#exec systemctl --user import-environment DISPLAY WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP XDG_SESSION_TYPE DBUS_SESSION_BUS_ADDRESS
+#exec dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP XDG_SESSION_TYPE DBUS_SESSION_BUS_ADDRESS
+#exec_always /usr/bin/gnome-keyring-daemon --start --components=secrets,pkcs11
+
+#exec_always dbus-update-activation-environment --systemd WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP XDG_SESSION_TYPE
+#exec_always systemctl --user import-environment WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP XDG_SESSION_TYPE
+
+
+exec_always dbus-update-activation-environment --systemd WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP XDG_SESSION_TYPE
+exec_always systemctl --user import-environment WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP XDG_SESSION_TYPE
+#exec_always systemctl --user start graphical-session.target
+#exec mako
+
+
+# Your other Sway configurations go here
+
+# exec_always --no-startup-id WLR_DRM_DEVICES=/dev/dri/card0 sway
+
+# SWAY
+
+set $mod Mod4
+
+#font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
+#font pango:Droid Sans Mono for Powerline 10
+font pango:Droid Sans Mono for Powerline Plus Nerd File Types Mono, Symbols Nerd Font Mono 10
+
+
+default_floating_border pixel 0
+focus_follows_mouse  no
+
+#don't move to neighbouring screen with hjkl
+focus_wrapping yes
+
+# Use by status bar
+set $gray1 #373d48
+set $gray2 #29303a
+
+# User by window
+set $gold1 #E6E4A5
+set $gold2 #262626
+
+#client.focused            $gold1   $gold1   #FFFFFF   $gold1
+#client.focused_inactive   $gold2   $gold2   #FFFFFF   #000000
+#client.unfocused          $gold2   $gold2   #FFFFFF   #000000
+
+# Make sure steam client is forced into floating.
+for_window [class="steamwebhelper" instance="steam"] floating enable
+
+# Make sure copyq is forced into floating.
+for_window [class="copyq"] floating enable
+
+# use Mouse+$mod to drag floating windows to their wanted position
+floating_modifier $mod
+
+# start a terminal
+bindsym $mod+Return exec kitty
+
+# kill focused window
+bindsym $mod+c kill
+
+# customize variables for workspaces
+set $ws1 1: 
+set $ws2 2: 
+set $ws3 3:
+set $ws4 4: 
+set $ws5 5:
+set $ws6 6: 
+set $ws7 7: 
+set $ws8 8: 
+set $ws9 9: 
+set $ws0 0:
+
+# switch to workspace
+bindsym $mod+1 workspace 1:$ws1
+bindsym $mod+2 workspace 2:$ws2
+bindsym $mod+3 workspace 3:$ws3
+bindsym $mod+4 workspace 4:$ws4
+bindsym $mod+5 workspace 5:$ws5
+bindsym $mod+6 workspace 6:$ws6
+bindsym $mod+7 workspace 7:$ws7
+#bindsym $mod+i workspace 8: 
+bindsym $mod+8 workspace 8:$ws8
+bindsym $mod+9 workspace 9:$ws9
+bindsym $mod+0 workspace 0:$ws0
+
+# move focused container to workspace
+bindsym $mod+Shift+1 move container to workspace 1:$ws1
+bindsym $mod+Shift+2 move container to workspace 2:$ws2
+bindsym $mod+Shift+3 move container to workspace 3:$ws3
+bindsym $mod+Shift+4 move container to workspace 4:$ws4
+bindsym $mod+Shift+5 move container to workspace 5:$ws5
+bindsym $mod+Shift+6 move container to workspace 6:$ws6
+bindsym $mod+Shift+7 move container to workspace 7:$ws7
+#bindsym $mod+Shift+i move container to workspace 8: 
+bindsym $mod+Shift+8 move container to workspace 8:$ws8
+bindsym $mod+Shift+9 move container to workspace 9:$ws9
+bindsym $mod+Shift+0 move container to workspace 0:$ws0
+
+bindsym $mod+z reload
+
+#######Assigns###############
+assign [class="Mesen"] 0:$ws0
+assign [class="Pcmanfm"] 1:$ws1
+assign [class="konsole"] 2:$ws2
+assign [class="URxvt"] 2:$ws2
+assign [class="kitty"] 2:$ws2
+assign [class="chromium"] 3:$ws3
+assign [class="^firefox$"] 3:$ws3
+assign [class="Brave-browser"] 3:$ws3
+assign [class="kwrite"] 4:$ws4
+assign [class="gedit"] 4:$ws4
+assign [class="kate"] 4:$ws4
+assign [class="Amule"] 5:$ws5
+assign [class="Vlc"] 6:$ws6
+assign [class="mpv"] 6:$ws6
+assign [class="Spotify"] 7:$ws7
+assign [class="cantata"] 7:$ws7
+assign [class="discord"] 8:$ws8
+assign [class="Zathura"] 9:$ws9
+assign [class="Jdownloader"] 9:$ws9
+assign [class="Gimp-2.10"] 9:$ws9
+assign [class="Virt-manager"] 9:$ws9
+assign [class="retroarch"] 0:$ws0
+assign [class="Lutris"] 0:$ws0
+assign [class="^dolphin-emu$"] 0:$ws0
+assign [class="RPCS3"] 0:$ws0
+assign [class="obs"] 9:$ws9
+assign [class="bsnes-plus"] 0:$ws0
+assign [class="Cemu_release"] 0:$ws0
+
+for_window [class="Mesen"] floating enable
+for_window [class="Pcmanfm"] border pixel 1
+for_window [class="Cemu_release"] border pixel 1, floating enable, resize set 1449 314, move position center
+for_window [class="Mesen"] border pixel 1, floating enable, resize set 1440 314, move position center
+for_window [title="Debugger"] border pixel 1, floating enable, resize set 1440 960, move position center
+for_window [title="^Oracle VM VirtualBox"] floating enable
+for_window [class="bsnes-plus"] floating enable
+for_window [title="Debugger"] floating enable
+for_window [title="Properties"] floating enable
+for_window [title="Sound Viewer"] floating enable
+for_window [class="feh"] border pixel 1, resize set 1449 314, floating enable, move position center
+#for_window [class="JDownloader"] border pixel
+for_window [class="Zathura"] border pixel 1
+for_window [class="mpv"] border pixel 1, move container to workspace 6:$ws6
+for_window [class="URxvt"] border pixel 1
+for_window [class="kitty"] border pixel 1
+for_window [class="konsole"] border pixel 1
+for_window [class="^firefox$"] border pixel 0, move container to workspace 3:$ws3
+for_window [class="^Brave-browser"] border pixel 0, move container to workspace 3:$ws3
+for_window [class="discord"] border pixel 1
+for_window [class="JDownloader"] border pixel 2, floating enable, resize set 1397 931, move position center, move container to workspace 9:$ws9
+for_window [class="SimpleScreenRecorder"] border pixel 2, floating enable, resize set 1024 768, move position center, move container to workspace 9:$ws9
+for_window [class="retroarch"] move container to workspace 0:$ws0
+for_window [class="Amule"] border pixel 1,move position center, move container to workspace 5:$ws5
+for_window [class="cantata"] move container to workspace 7:$ws7
+for_window [class="Gimp-2.10"] move container to workspace 9:$ws9
+for_window [class="Virt-manager"] floating enable, move container to workspace 9:$ws9
+for_window [class="Lutris"] move container to workspace 0:$ws0
+for_window [class="Steam"] floating enable, move container to workspace 0:$ws0
+for_window [class="^dolphin-emu$"] floating enable, move position center, move container to workspace 0:$ws0
+for_window [class="obs"] floating enable, move position center, move container to workspace 9:$ws9
+for_window [class="Xarchiver"] floating enable, move position center, resize set 1497 931, border pixel 1
+for_window [title="About Mozilla Firefox"] floating enable
+for_window [title="Copying files"] floating enable
+for_window [class="XTerm"] floating enable, resize set 716 346
+for_window [class="Crossover"] move position center, floating enable, border pixel 2, resize set 1497 931
+for_window [title="Run Command"] move position center, floating enable, resize set 1024 768
+for_window [title="About CrossOver"] floating enable, resize set 640 480
+for_window [title="Analyse and Add Links"] floating enable, resize set 1024 420, move position center #Jdownloader
+for_window [class="feh"] floating enable, move position center
+for_window [window_role="About"] floating enable
+for_window [title="NVIDIA X Server Settings"] floating enable, move position center
+for_window [class="Nvidia-settings" instance="nvidia-settings"] floating enable, move position center, floating enable
+for_window [class="Blueman-manager"] border pixel 1, floating enable, move position center, resize set 1024 768
+for_window [class="flameshot"] border pixel 1, floating enable, move position center, resize set 1024 768
+for_window [class="Pulseeffects"] border pixel 1, floating enable, move position center, resize set 1497 931
+for_window [class="Engrampa"] border pixel 1, floating enable, move position center, resize set 640 480
+for_window [title="Tomb Raider Options"] border pixel 1, floating enable
+for_window [title="Welcome to RPCS3"] floating enable
+for_window [class="CMakeSetup"] floating enable
+for_window [class="PCSX2"] floating enable
+for_window [title="PCSX2 Program Log"] floating enable
+for_window [title="balena-etcher-electron"] floating enable
+for_window [class="VirtualBox Machine"] floating enable, border pixel 2
+for_window [class="VirtualBox Manager"] floating enable, border pixel 2, move container to workspace 8:$ws8
+for_window [class="RPCS3"] border pixel 1, floating enable
+for_window [class="yuzu"] floating enable, move container to workspace 0:$ws0
+for_window [class="epicgameslauncher.exe"] floating enable, move container to workspace 0:$ws0
+for_window [class="Code"] floating disable, move container to workspace 4:$ws4
+for_window [title="Picture-in-Picture"] floating enable, move container to workspace 3:$ws3
+for_window [title="steam_proton"] floating enable
+for_window [class="dolphin-emu"] floating enable, border normal
+
+# GPU Control: ventana flotante y centrada
+for_window [app_id="org.gpucontrol.GpuControl"] floating enable, resize set 1280 820, move position center
+
+for_window [app_id="org.cpucontrol.CpuControl"] floating enable, resize set 1280 860, move position center
+
+for_window [app_id="org.pcinfo.PcInfo"] floating enable, resize set 1180 820, move position center
+
+for_window [app_id="io.github.padlink"] floating enable, resize set 1000 720
+
+# Glorious Control (mouse Glorious Model D): flotante, centrada, tamaño a su contenido
+for_window [app_id="io.github.compadre.GloriousCtl"] floating enable, border pixel 1, resize set 760 900, move position center
+for_window [app_id="io.github.compadre.GloriousCtl" title="^Elegir color$"] floating enable, move position center
+# Added 31/12/24
+# Sway RetroArch
+# Asignar RetroArch al workspace 0
+# Command to get this:
+# swaymsg -t get_tree | grep -A 20 brave
+# Then, look for app_id
+
+for_window [app_id="com.libretro.RetroArch"] move to workspace 0:$ws0
+for_window [app_id="com.libretro.RetroArch"] inhibit_idle visible
+for_window [app_id="com.libretro.RetroArch"] fullscreen enable
+for_window [app_id="com.libretro.RetroArch"] focus
+
+assign [app_id="org.kde.ktorrent"] workspace number 8
+for_window [app_id="org.kde.ktorrent"] floating enable, border pixel 2, resize set width 1400 px height 900 px, move position center
+
+
+# for window that you might need to move, enable the following
+bindsym $mod+Shift+space floating toggle , border normal 1
+
+# rofi 2.x ya no acepta -width/-padding/-bw/-opacity/-fuzzy: van en -theme-str y -matching
+bindsym $mod+p exec --no-startup-id rofi -modes drun,run -show drun -show-icons -terminal kitty -matching fuzzy -font "Droid Sans Mono for Powerline 14" -theme-str 'window {width: 25%; padding: 5px; border: 0px;}'
+
+# added from other site
+#exec --no-startup-id pcmanfm ~
+bindsym $mod+Shift+b exec --no-startup-id pcmanfm ~
+
+# OBS capture wayland
+#exec --no-startup-id /usr/lib/xdg-desktop-portal -r
+
+#exec dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway
+#exec --no-startup-id sh -c 'pgrep -f gnome-keyring-daemon >/dev/null || /usr/bin/gnome-keyring-daemon --start --components=secrets'
+#exec --no-startup-id dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway
+
+#setenv XDG_CURRENT_DESKTOP sway
+#setenv XDG_SESSION_TYPE wayland
+#setenv XDG_SESSION_DESKTOP sway
+#setenv SDL_VIDEODRIVER wayland
+#setenv QT_QPA_PLATFORM wayland
+#setenv MOZ_ENABLE_WAYLAND 1
+
+# 6-12-2024
+# mantener sesiones abiertas en brave, tanto en kde como sway
+#xec-once = gnome-keyring-daemon -sd
+
+
+# to launch urxvt 
+
+# bindsym $mod+Shift+j exec urxvt -fn 'xft:DejaVu Sans Mono for Powerline-08'
+
+# restart dunst
+#bindsym $mod+Shift+d exec killall dunst && exec notify-send 'restart dunst'
+
+# Synaptic mouse to allow vert scrolling
+# exec --no-startup-id synclient VertEdgeScroll=1 HorizEdgeScroll=1 TapButton1=1
+
+# screen lock
+#bindsym Control+$mod+l exec i3lock
+
+# change focus
+bindsym $mod+h focus left
+bindsym $mod+j focus down
+bindsym $mod+k focus up
+bindsym $mod+l focus right
+
+# move focused window
+bindsym $mod+Shift+h move left
+bindsym $mod+Shift+j move down
+bindsym $mod+Shift+k move up
+bindsym $mod+Shift+l move right
+
+
+# Compton  03/04/18 <-- Disable this date
+# exec_always --no-startup-id "killall -q compton; compton --config ~/.config/i3/compton.conf"
+
+# split in horizontal orientation
+#bindsym $mod+v split h
+
+# split in vertical orientation
+#bindsym $mod+g split v
+
+# enter fullscreen mode for the focused container
+bindsym $mod+f fullscreen
+
+# change container layout (tabbed, toggle split)
+#bindsym $mod+n layout tabbed
+#bindsym $mod+m layout toggle split
+
+# container navigation
+#bindsym $mod+d focus parent
+#bindsym $mod+b focus child
+
+
+# Wayland services
+# enable notify daemon
+exec mako
+##
+# Make a screenshot on wayland
+
+set $shotdir $HOME/Screenshots
+bindsym Print exec --no-startup-id sh -c 'mkdir -p "$shotdir" && grim -g "$(slurp -d)" "$shotdir/$(date -u +%F_%H-%M-%S).png"'
+bindsym $mod+Print exec --no-startup-id sh -c 'grim -g "$(slurp -d)" - | wl-copy -t image/png'
+
+
+# Capturar pantalla completa
+#bindsym Print exec ~/.config/sway/screenshot.sh full
+
+# Capturar una región seleccionada
+#bindsym Shift+Print exec ~/.config/sway/screenshot.sh
+
+# move container between displays
+bindsym $mod+semicolon move workspace to output right
+
+# toggle tiling / floating
+bindsym $mod+Shift+f floating toggle
+
+# change focus between tiling / floating windows
+bindsym $mod+space focus mode_toggle
+
+# switch to last workspace
+bindsym $mod+t workspace back_and_forth
+
+# Mantener activado el teclado numérico
+input type:keyboard {
+    xkb_numlock enabled
+}
+
+mode "resize" {
+        bindsym h   resize shrink width 10 px or 10 ppt
+        bindsym j   resize grow height 10 px or 10 ppt
+        bindsym k   resize shrink height 10 px or 10 ppt
+        bindsym l   resize grow width 10 px or 10 ppt
+
+        # back to normal: Enter or Escape or q or ^[
+        bindsym Return mode "default"
+        bindsym q mode "default"
+        bindsym Escape mode "default"
+        bindcode Control+34 mode "default"
+}
+
+bindsym $mod+s mode "resize"
+
+# Functions KEYS-TOP
+# To find your XF86 keys: either use acpi_call, xev or xmodmap -pke
+#bindsym XF86Explorer exec --no-startup-id i3-msg 'workspace 9:fm; exec pcmanfm; $ws1'
+bindsym XF86Explorer exec --no-startup-id "pcmanfm"
+#bindsym XF86HomePage exec --no-startup-id "firefox"
+#bindsym XF86HomePage exec --no-startup-id i3-msg 'workspace 8:web; exec firefox; $ws3'
+bindsym XF86HomePage exec --no-startup-id "firefox" 
+
+
+# Pulse Audio controls
+#bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +5% #increase sound volume
+# The following is setup in order to handle better the slider of CREATIVE Sound Blaster Z Master Volume
+# This works if you set the soundcard as default one
+bindsym XF86AudioRaiseVolume exec --no-startup-id amixer set Master 1+ #increase sound volume
+bindsym XF86AudioLowerVolume exec --no-startup-id amixer set Master 1- #decrease sound volume 
+#bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -5% #decrease sound volume
+#bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle # mute sound
+bindsym XF86AudioMute exec --no-startup-id amixer set Master toggle # Mute sound
+
+# first you have to set default sink then, do the following
+# change # of the sink by environment variable @DEFAULT_SINK@
+# via: https://wiki.archlinux.org/index.php/PulseAudio/Examples#Set_the_default_output_source
+
+#bindsym XF86Tools exec --no-startup-id "mpd"
+bindsym XF86AudioPlay exec "mpc toggle"
+bindsym XF86AudioStop exec "mpc stop"
+bindsym XF86AudioNext exec "mpc next"
+bindsym XF86AudioPrev exec "mpc prev"
+
+#bindsym XF86MonBrightnessUp exec xbacklight -inc 10     # increase screen brightness
+#bindsym XF86MonBrightnessDown exec xbacklight -dec 10   # decrease screen brightness
+
+#bindsym XF86TouchpadToggle exec "synclient TouchpadOff=$(synclient | awk '/TouchpadOff/ {print ($3+1)%2}')"
+
+# arandr es de X11; en sway se usa wdisplays (si está instalado)
+bindsym XF86Display exec wdisplays
+
+
+# Retroarch shortcut # two processors
+#bindsym XF86Mail exec "taskset 0x0000003 retroarch" 
+# Desactivado, por estar dando problemas 22/11/2024
+
+# bindsym $mod+a exec "urxvt -e pulsemixer"
+#bindsym $mod+Shift+a exec "pavucontrol"
+#bindsym $mod+Shift+g exec "chromium"
+#bindsym $mod+Shift+9 exec "/usr/bin/bash -c /home/speed/spot && exec notify-send 'Starting Spotify'"
+
+##Wallpaper##
+#exec_always feh --bg-scale ~/Pictures/background.jpg
+# exec_always feh --bg-fill ~/Pictures/audi-r8-gt3-spot.jpg
+
+##compton##
+#exec_always compton -f -b --backend glx --vsync opengl-swc
+# las demas opciones luego de -f, pueden provocar tearing en fullscreen.
+# Video para probar: https://goo.gl/EWhF1e
+
+#exec_always compton --vsync opengl --backend xr_glx_hybrid --paint-on-overlay --shadow-exclude n:w:VirtualBox -b
+
+# Para que brave no este pidiendo clave cada cold start
+exec gnome-keyring-daemon --start --components=secrets
+exec systemctl --user import-environment DISPLAY WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP XDG_SESSION_TYPE DBUS_SESSION_BUS_ADDRESS
+exec dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP XDG_SESSION_TYPE DBUS_SESSION_BUS_ADDRESS
+exec systemctl --user start xdg-desktop-portal.service
+
+
+# Multi-monitor
+
+# Move focused workspace to monitor
+bindsym $mod+Shift+bracketleft move workspace to output left
+bindsym $mod+Shift+bracketright move workspace to output right
+
+
+# Sway 30 diciembre 2025
+# Agregado esta linea para polkit
+#exec_always --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
+
+# si el proceso no existe, lo arranca.
+# si el proceso existe, no lo arranca.
+exec --no-startup-id sh -c 'pgrep -f /usr/bin/lxqt-policykit-agent >/dev/null || /usr/bin/lxqt-policykit-agent'
+
+# exit i3 (logs you out of your X session)
+#bindsym $mod+Shift+Delete exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
+
+
+set $mode_system System:   L :  | S :  | P :  | R :  | E :   
+mode "$mode_system" {
+    # i3lock-fancy e i3-msg son de X11; en sway: swaylock y swaymsg.
+    # (antes la línea de suspender no cerraba las comillas y usaba $Lock sin definir)
+    bindsym l exec --no-startup-id swaylock -f -c 000000, mode "default"
+    bindsym s exec --no-startup-id swaylock -f -c 000000 && systemctl suspend, mode "default"
+    bindsym p exec --no-startup-id systemctl poweroff -i, mode "default"
+    bindsym r exec --no-startup-id systemctl reboot, mode "default"
+    bindsym e exec --no-startup-id swaymsg exit, mode "default"
+    # back to normal: Enter or Escape
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+bindsym $mod+Shift+Delete mode "$mode_system"
+	
+bar {
+ position top
+# font pango:Droid Sans Mono for Powerline 10
+   font pango:Droid Sans Mono for Powerline Plus Nerd File Types Mono, Symbols Nerd Font Mono 10
+ # font pango: JetBrainsMono Nerd Font Mono 11, Noto Color Emoji 10
+ status_command ~/conky-wrapper
+   strip_workspace_numbers yes
+   colors {
+   statusline #AAAAAA
+   background $gray2
+   focused_workspace $gray2 $gray2 #FFFFFF
+   inactive_workspace $gray1 $gray1 #AAAAAA
+   }
+}
+
+
+# Sway-only: protege geometría del selector GTK en monitores mixtos
+exec --no-startup-id ~/.local/bin/sway-gtk-filechooser-guard
+
+# Project Atlas · Atlas Audio ($mod+a abre la app, $mod+Shift+a modo Audio).
+# Lo instala https://github.com/1985a/project-atlas; si no está, sway ignora el include.
+include ~/.local/share/audio-profile/sway/atlas-audio.conf
+
+# Zebamp (reproductor estilo Winamp para MPD): ventanas flotantes sin borde
+for_window [app_id="zebamp"] floating enable, border none
+# Zebamp: buscar canciones desde cualquier ventana
+bindsym $mod+Shift+s exec ~/.local/bin/zebamp --buscar

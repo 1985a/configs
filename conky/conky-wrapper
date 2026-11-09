@@ -1,16 +1,12 @@
-#!/usr/bin/sh
-#echo "{\"version\":1}"
-#echo "[[]"
-#conky -c ~/.conkyrc
+#!/bin/sh
+# Lanza conky como "status_command" de swaybar (protocolo JSON de i3bar).
+# Referenciado desde la sección "bar" de ~/.config/i3/config.
 
-# Send the header so that i3bar knows we want to use JSON:
+# Cabecera: indica a la barra que hablamos JSON
 echo '{"version":1}'
-
-# Begin the endless array.
+# Comienza el arreglo infinito
 echo '['
-
-# We send an empty first array of blocks to make the loop simpler:
+# Primer elemento vacío, así cada línea de conky puede empezar con coma
 echo '[],'
 
-# Now send blocks with information forever:
-exec conky -c $HOME/.conkyrc.json
+exec conky -c "$HOME/.conkyrc.json"
