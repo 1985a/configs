@@ -261,8 +261,9 @@ for_window [app_id="org.kde.ktorrent"] floating enable, border pixel 2, resize s
 # for window that you might need to move, enable the following
 bindsym $mod+Shift+space floating toggle , border normal 1
 
-# rofi 2.x ya no acepta -width/-padding/-bw/-opacity/-fuzzy: van en -theme-str y -matching
-bindsym $mod+p exec --no-startup-id rofi -modes drun,run -show drun -show-icons -terminal kitty -matching fuzzy -font "Droid Sans Mono for Powerline 14" -theme-str 'window {width: 25%; padding: 5px; border: 0px;}'
+# lanzador: lista de comandos (modo run); Ctrl+Tab cambia a aplicaciones (drun).
+# Fuente, ancho y búsqueda difusa están en ~/.config/rofi/config.rasi
+bindsym $mod+p exec --no-startup-id rofi -show run
 
 # added from other site
 #exec --no-startup-id pcmanfm ~

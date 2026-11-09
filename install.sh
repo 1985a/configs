@@ -93,6 +93,7 @@ install_dir  bin                      .local/bin
 install_file mako/config              .config/mako/config
 install_file mako/restart.conf        .config/systemd/user/mako.service.d/restart.conf
 install_file kitty/kitty.conf         .config/kitty/kitty.conf
+install_file rofi/config.rasi         .config/rofi/config.rasi
 install_file tmux/tmux.conf           .tmux.conf
 install_dir  fonts                    .local/share/fonts
 

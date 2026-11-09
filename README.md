@@ -66,6 +66,7 @@ en `local.example/` hay plantillas:
 | `ncmpcpp/` | `~/.ncmpcpp/` | config, carátulas (`cover.sh`, `cover_pane.sh`) y letras desde lrclib.net |
 | `bin/` | `~/.local/bin/` | notificación de canción, ncmpcpp con carátula en tmux, guardián del selector de archivos GTK |
 | `mako/` | `~/.config/mako/`, `~/.config/systemd/user/mako.service.d/` | notificaciones |
+| `rofi/config.rasi` | `~/.config/rofi/config.rasi` | lanzador (<kbd>Super</kbd>+<kbd>p</kbd>) |
 | `kitty/`, `tmux/` | `~/.config/kitty/kitty.conf`, `~/.tmux.conf` | terminal |
 | `zsh/`, `shell/` | `~/.zshrc`, `~/.zprofile`, `~/.zshenv`, `~/.profile`, `~/.bash_profile`, `~/.bashrc` | shells |
 | `x11/` | `~/.Xresources`, `~/.scripts/dir_colors` | colores (Solarized) |
@@ -118,7 +119,8 @@ corregidos que afectaban al funcionamiento:
   cada 2 s; la posición del texto de MPD se guardaba en `/tmp`.
 - **sway:** la tecla de suspender del modo sistema no cerraba las comillas y usaba
   `$Lock` sin definir; bloquear y salir usaban `i3lock-fancy` e `i3-msg` (de X11); faltaban
-  comas en varias reglas `for_window`; las opciones de rofi ya no existen en rofi 2.
+  comas en varias reglas `for_window`; las opciones de rofi ya no existen en rofi 2
+  (ahora están en `rofi/config.rasi`).
 - **zsh:** `umask=022` creaba una variable en vez de cambiar la umask; `-D_FORTYFY_SOURCE`
   (mal escrito) no activaba nada; el alias `scanport` no podía recibir argumentos; al abrir
   cada terminal se hacía una petición a archlinux.org.

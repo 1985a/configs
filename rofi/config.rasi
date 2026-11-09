@@ -1,0 +1,17 @@
+/* Configuración de rofi (lanzador con Super+p en sway).
+ * Las opciones viejas -width/-padding/-bw/-fuzzy de la línea de comandos ya no
+ * existen en rofi 2.x; van aquí. No se ponen en el bindsym de sway porque sway
+ * corta los comandos en cada ";" y rofi no llegaba a abrirse. */
+configuration {
+    modes: "run,drun";
+    terminal: "kitty";
+    matching: "fuzzy";
+    show-icons: true;
+    font: "Droid Sans Mono for Powerline 14";
+}
+
+window {
+    width: 25%;
+    padding: 5px;
+    border: 0px;
+}
