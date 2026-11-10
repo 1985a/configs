@@ -6,6 +6,11 @@ smart_borders on
 gaps inner 5
 gaps outer 5
 
+# Ninguna ventana en pantalla completa deja que se apaguen los monitores: vídeo en
+# el navegador, vlc, mpv, juegos... (ver bin/sway-idle). Va antes que las reglas
+# de cada programa para que estas puedan cambiarlo (RetroArch usa "visible").
+for_window [all] inhibit_idle fullscreen
+
 # Ventanas sin titulo y sin bordes
 for_window [class="^.*"] border none
 
@@ -502,8 +507,6 @@ bar {
 # Apaga los monitores tras 30 min sin actividad; se encienden al tocar teclado o ratón.
 # (bin/sway-idle; los minutos se cambian con SWAY_IDLE_MIN)
 exec_always --no-startup-id ~/.local/bin/sway-idle
-# Con una ventana en pantalla completa (vídeo, juego) no se apagan.
-for_window [all] inhibit_idle fullscreen
 
 # Sway-only: protege geometría del selector GTK en monitores mixtos
 exec --no-startup-id ~/.local/bin/sway-gtk-filechooser-guard

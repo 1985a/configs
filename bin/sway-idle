@@ -12,8 +12,8 @@
 # No se apagan:
 #  - con una ventana en pantalla completa (regla inhibit_idle en sway/config),
 #    ni con vídeo en mpv/navegador (ellos mismos lo impiden);
-#  - mientras haya un juego abierto (Steam, RetroArch, gamescope), aunque esté
-#    en ventana: el mando no cuenta como actividad para swayidle. Al cerrar el
+#  - mientras haya un juego abierto (lista JUEGOS más abajo: Steam, Lutris,
+#    wine/Proton, RetroArch y los emuladores), aunque esté en ventana: el mando no cuenta como actividad para swayidle. Al cerrar el
 #    juego se cuentan otra vez SWAY_IDLE_MIN minutos antes de apagar.
 set -u
 
@@ -24,12 +24,33 @@ PASO="${SWAY_IDLE_PASO:-60}"   # cada cuánto se mira si sigue el juego (s)
 UID_NUM="$(id -u)"
 PIDFILE="${XDG_RUNTIME_DIR:-/tmp}/sway-idle-off.pid"
 
+# Programas que cuentan como "juego abierto". Es el nombre del proceso (lo que
+# muestra "ps -o comm", máx. 15 letras), comparado entero. Para añadir uno:
+# arrancarlo y mirar "ps -eo comm | sort -u".
+JUEGOS=(
+    retroarch dolphin-emu pcsx2-qt rpcs3 yuzu 'Ryujinx.*' snes9x-gtk bsnes ares
+    'citra(-qt)?' azahar flycast 'mgba(-qt)?' Mesen
+    gamescope   # Steam o lanzado a mano dentro de gamescope
+    wineserver  # cualquier juego de Windows: Lutris, Heroic, Proton, wine suelto
+    sm-nshvc ocarina runner   # Super Metroid, Ocarina (NX2navi), AM2R
+)
+JUEGOS_RE="$(IFS='|'; echo "${JUEGOS[*]}")"
+
+# Programas que se reconocen por su línea de órdenes (anclada al inicio para no
+# contar otros procesos que solo mencionen el texto).
+JUEGOS_CMD=(
+    '^[^ ]*reaper SteamLaunch AppId='   # cada juego de Steam
+    '^[^ ]* [^ ]*/lutris-wrapper '      # juegos nativos de Lutris
+    '^mono [^ ]*Mesen-S\.exe'          # Mesen-S (con mono)
+)
+
 hay_juego() {
-    # Steam lanza cada juego con ".../reaper SteamLaunch AppId=<n> -- ...".
-    # Anclado al inicio para no contar otros procesos que solo mencionen el texto.
-    pgrep -u "$UID_NUM" -f -- '^[^ ]*reaper SteamLaunch AppId=' >/dev/null \
-        || pgrep -u "$UID_NUM" -x retroarch >/dev/null \
-        || pgrep -u "$UID_NUM" -x gamescope >/dev/null
+    local re
+    pgrep -u "$UID_NUM" -x -- "$JUEGOS_RE" >/dev/null && return 0
+    for re in "${JUEGOS_CMD[@]}"; do
+        pgrep -u "$UID_NUM" -f -- "$re" >/dev/null && return 0
+    done
+    return 1
 }
 
 # Termina un "off" que esté esperando a que se cierre un juego.

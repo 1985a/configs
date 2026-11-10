@@ -64,7 +64,7 @@ en `local.example/` hay plantillas:
 | `barra/` | `~/.scripts/scripts/` | scripts que usa la barra: sensores, GPU, MPD, volumen, Bluetooth, clima, noticias de Arch |
 | `mpd/mpd.conf` | `~/.mpd/mpd.conf` | MPD con salida PipeWire |
 | `ncmpcpp/` | `~/.ncmpcpp/` | config, carátulas (`cover.sh`, `cover_pane.sh`) y letras desde lrclib.net |
-| `bin/` | `~/.local/bin/` | notificación de canción, ncmpcpp con carátula en tmux, guardián del selector de archivos GTK, `sway-idle` (apaga los monitores tras 30 min sin actividad, salvo en pantalla completa o con un juego de Steam/RetroArch abierto; minutos con `SWAY_IDLE_MIN`) |
+| `bin/` | `~/.local/bin/` | notificación de canción, ncmpcpp con carátula en tmux, guardián del selector de archivos GTK, `sway-idle` (apaga los monitores tras 30 min sin actividad, salvo con una ventana en pantalla completa (vídeo, juego) o con un juego abierto: Steam, Lutris, wine/Proton, RetroArch y los emuladores; minutos con `SWAY_IDLE_MIN`) |
 | `mako/` | `~/.config/mako/`, `~/.config/systemd/user/mako.service.d/` | notificaciones |
 | `rofi/config.rasi` | `~/.config/rofi/config.rasi` | lanzador (<kbd>Super</kbd>+<kbd>p</kbd>) |
 | `kitty/`, `tmux/` | `~/.config/kitty/kitty.conf`, `~/.tmux.conf` | terminal |
