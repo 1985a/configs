@@ -6,6 +6,7 @@
 sway
 swaybg
 swaylock
+swayidle
 mako
 libnotify
 rofi

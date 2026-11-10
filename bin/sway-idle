@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+# Apaga los monitores tras un rato sin actividad (teclado/ratón) y los enciende
+# al volver. Lo lanza ~/.config/i3/config con "exec_always": al recargar sway se
+# reemplaza el swayidle anterior, así que nunca quedan dos.
+#
+# Minutos de espera: variable SWAY_IDLE_MIN (por defecto 30).
+# No se apaga mientras haya algo que lo impida (vídeo en mpv/navegador, ventanas
+# con inhibit_idle en sway/config).
+set -u
+
+MIN="${SWAY_IDLE_MIN:-30}"
+[[ "$MIN" =~ ^[1-9][0-9]*$ ]] || { echo "SWAY_IDLE_MIN no válido: $MIN" >&2; exit 2; }
+
+command -v swayidle >/dev/null 2>&1 || { echo "falta swayidle" >&2; exit 1; }
+
+pkill -u "$(id -u)" -x swayidle 2>/dev/null || true
+
+exec swayidle -w \
+    timeout $((MIN * 60)) 'swaymsg "output * power off"' \
+    resume 'swaymsg "output * power on"'
