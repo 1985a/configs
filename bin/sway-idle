@@ -3,18 +3,77 @@
 # al volver. Lo lanza ~/.config/i3/config con "exec_always": al recargar sway se
 # reemplaza el swayidle anterior, así que nunca quedan dos.
 #
+#   sway-idle          arranca swayidle (lo que hace sway)
+#   sway-idle off      lo llama swayidle al cumplirse el tiempo
+#   sway-idle on       lo llama swayidle al volver la actividad
+#
 # Minutos de espera: variable SWAY_IDLE_MIN (por defecto 30).
-# No se apaga mientras haya algo que lo impida (vídeo en mpv/navegador, ventanas
-# con inhibit_idle en sway/config).
+#
+# No se apagan:
+#  - con una ventana en pantalla completa (regla inhibit_idle en sway/config),
+#    ni con vídeo en mpv/navegador (ellos mismos lo impiden);
+#  - mientras haya un juego abierto (Steam, RetroArch, gamescope), aunque esté
+#    en ventana: el mando no cuenta como actividad para swayidle. Al cerrar el
+#    juego se cuentan otra vez SWAY_IDLE_MIN minutos antes de apagar.
 set -u
 
 MIN="${SWAY_IDLE_MIN:-30}"
 [[ "$MIN" =~ ^[1-9][0-9]*$ ]] || { echo "SWAY_IDLE_MIN no válido: $MIN" >&2; exit 2; }
+ESPERA=$((MIN * 60))
+PASO="${SWAY_IDLE_PASO:-60}"   # cada cuánto se mira si sigue el juego (s)
+UID_NUM="$(id -u)"
+PIDFILE="${XDG_RUNTIME_DIR:-/tmp}/sway-idle-off.pid"
 
-command -v swayidle >/dev/null 2>&1 || { echo "falta swayidle" >&2; exit 1; }
+hay_juego() {
+    # Steam lanza cada juego con ".../reaper SteamLaunch AppId=<n> -- ...".
+    # Anclado al inicio para no contar otros procesos que solo mencionen el texto.
+    pgrep -u "$UID_NUM" -f -- '^[^ ]*reaper SteamLaunch AppId=' >/dev/null \
+        || pgrep -u "$UID_NUM" -x retroarch >/dev/null \
+        || pgrep -u "$UID_NUM" -x gamescope >/dev/null
+}
 
-pkill -u "$(id -u)" -x swayidle 2>/dev/null || true
+# Termina un "off" que esté esperando a que se cierre un juego.
+cancelar_espera() {
+    local pid
+    pid="$(cat "$PIDFILE" 2>/dev/null)" || return 0
+    [[ "$pid" =~ ^[0-9]+$ ]] && kill "$pid" 2>/dev/null
+    rm -f "$PIDFILE"
+}
 
-exec swayidle -w \
-    timeout $((MIN * 60)) 'swaymsg "output * power off"' \
-    resume 'swaymsg "output * power on"'
+apagar() {
+    cancelar_espera
+    echo $$ > "$PIDFILE"
+    trap 'rm -f "$PIDFILE"' EXIT
+
+    local libre=0 hubo_juego=0
+    while :; do
+        if hay_juego; then
+            hubo_juego=1 libre=0
+        elif (( ! hubo_juego || libre >= ESPERA )); then
+            break
+        fi
+        sleep "$PASO"
+        (( hubo_juego )) && ! hay_juego && libre=$((libre + PASO))
+    done
+    swaymsg 'output * power off' >/dev/null
+}
+
+case "${1:-}" in
+    off) apagar ;;
+    on)
+        cancelar_espera
+        swaymsg 'output * power on' >/dev/null
+        ;;
+    '')
+        command -v swayidle >/dev/null 2>&1 || { echo "falta swayidle" >&2; exit 1; }
+        pkill -u "$UID_NUM" -x swayidle 2>/dev/null || true
+        cancelar_espera
+        # Sin -w: "off" puede quedarse esperando a que se cierre un juego y
+        # swayidle no debe bloquearse por eso.
+        self="$(readlink -f "$0")"
+        exec swayidle \
+            timeout "$ESPERA" "'$self' off" \
+            resume "'$self' on"
+        ;;
+    *) echo "uso: ${0##*/} [on|off]" >&2; exit 2 ;;
+esac
